@@ -63,23 +63,33 @@
                            :placeholder="attributes.email || placeholders.email">
                 </div>
 
-                <div class="flex-item" v-if="attributes.enable_phone">
+            </div>
+
+            <div class="flex" v-if="attributes.enable_phone">
+                <div class="flex-item w-half">
                     <input v-model="form.phone"
                            name="phone"
                            type="tel"
                            :placeholder="attributes.phone || placeholders.phone">
                 </div>
-
+                <div class="flex-item w-half" >
+                    <v-select v-model="form.communication_preference"
+                              :options="communication_preference_options"
+                              :reduce="option => option.value"
+                              label="text"
+                              :placeholder="attributes.communication_preference || placeholders.communication_preference">
+                    </v-select>
+                </div>
             </div>
             <div class="flex">
-                <div class="flex-item country-field">
+                <div class="flex-item w-half">
                     <v-select v-if="countriesList" v-model="form.country"
                               :options="countriesList"
                               label="country"
                               :placeholder="attributes.country || placeholders.country">
                     </v-select>
                 </div>
-                <div class="flex-item zip-field">
+                <div class="flex-item w-half">
                     <input v-model="form.zip_code" type="text"
                            :placeholder="attributes.zip_code || placeholders.zip_code"
                            style="min-height: 54px; !important;">
@@ -175,16 +185,27 @@
         attributes: null,
         countriesList: null,
         interestsList: null,
+        communication_preference_options:[
+          {
+            text: 'Email',
+            value : 'email'
+          },
+          {
+            text: 'Phone',
+            value : 'phone'
+          }
+        ],
         placeholders: {
           first_name: 'First Name',
           last_name: 'Last Name',
           email: 'Email',
           phone: 'Phone Number',
+          communication_preference: 'Communication Preference',
           country: 'Choose a Country',
           zip_code: 'Zip Code',
           age_consent: 'By signing this form I confirm I am over 13 years old.',
           communication_consent: 'I agree to receive communications from ADRA. ',
-          interest: 'How would you describe your interest',
+          interest: 'How would you describe your interest ?',
           country_code: null,
           submit_button: 'Submit'
         },
@@ -197,6 +218,7 @@
           zip_code: null,
           age_consent: 0,
           communication_consent: 0,
+          communication_preference: null,
           interest: null,
           ref_token: null,
           campaign_token: null,
@@ -209,13 +231,7 @@
 
     },
     created () {
-
-      // const att = document.querySelector('[data-pk-atts]');
-      // this.attributes = shortcodeAttributes
-
       this.attributes = this.$root.$data.shortcodeAttributes
-      // this.attributes = "LOL"
-
     },
     methods: {
       submitForm () {
@@ -279,12 +295,13 @@
         min-width: 200px;
     }
 
-    div.adra-plugin input:not('vs__search'){
+
+    div.adra-plugin form input {
         width: 100%;
-        height: 54.8px;
+        height: 54px;
     }
-    div.adra-plugin input[type="search"].vs__search,
-    div.adra-plugin input[type="search"].vs__search:focus{
+    div.adra-plugin input.vs__search,
+    div.adra-plugin input.vs__search:focus{
         border: 1px solid transparent !important;
         border-left: none !important;
         width: 0 !important;
@@ -306,7 +323,7 @@
         flex: 1 0 auto;
         padding: 0.5em;
     }
-    div.adra-plugin div.country-field{
+    div.adra-plugin div.w-half{
         min-width : 50%;
     }
 
