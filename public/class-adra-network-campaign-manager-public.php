@@ -116,8 +116,7 @@ class Adra_Network_Campaign_Manager_Public {
 
   private function is_develop_serve()
     {
-        
-        
+        return true;
         if ($this->checkStatus("127.0.0.1:8080"))
             return true;
         else

@@ -72,14 +72,14 @@
 
             </div>
             <div class="flex">
-                <div class="flex-item flex-3-quarter">
+                <div class="flex-item country-field">
                     <v-select v-if="countriesList" v-model="form.country"
                               :options="countriesList"
                               label="country"
                               :placeholder="attributes.country || placeholders.country">
                     </v-select>
                 </div>
-                <div class="flex-item flex-quarter">
+                <div class="flex-item zip-field">
                     <input v-model="form.zip_code" type="text"
                            :placeholder="attributes.zip_code || placeholders.zip_code"
                            style="min-height: 54px; !important;">
@@ -87,7 +87,7 @@
             </div>
             <div class="flex">
 
-                <div class="flex-item flex-3-quarter">
+                <div class="flex-item ">
                     <v-select v-if="interestsList"
                               v-model="form.interest"
                               :options="interestsList"
@@ -278,6 +278,7 @@
     div.adra-plugin form button.adra-form-submit {
         min-width: 200px;
     }
+
     div.adra-plugin input:not('vs__search'){
         width: 100%;
         height: 54.8px;
@@ -289,21 +290,24 @@
         width: 0 !important;
         padding: 0 7px !important;
         height: 44px !important;
-
+        color: inherit !important;
     }
 
 
     div.adra-plugin div.flex {
         display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
+        flex-flow: row wrap;
+
         justify-content: start;
         align-items: start;
     }
 
     div.adra-plugin div.flex-item {
-        flex: 1 0;
+        flex: 1 0 auto;
         padding: 0.5em;
+    }
+    div.adra-plugin div.country-field{
+        min-width : 50%;
     }
 
     div.adra-plugin div.flex-fullwidth {
@@ -311,14 +315,16 @@
     }
 
     div.adra-plugin div.flex-quarter {
-        flex-basis: 25%;
+        /*flex-basis: 25%;*/
+        flex-basis: auto;
     }
 
     div.adra-plugin div.flex-3-quarter {
-        flex-basis: 75%;
+        flex-basis: auto;
+
     }
 
-    div.adra-plugin form#adra-campaign-manager input[type=text],
+    div.adra-plugin form#adra-campaign-manager input,
     div.adra-plugin form#adra-campaign-manager  input::placeholder {
         color: #707070c2 !important;
     }
