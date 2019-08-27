@@ -1,0 +1,23 @@
+{
+  "name": "adra-network-campaign-manager",
+  "version": "1.0.0",
+  "description": "Wordpress plugin",
+  "main": "index.js",
+  "scripts": {
+    "build-all": "npm run build-admin & npm run build-public",
+    "build-admin": "cd admin && npm run build",
+    "build-public": "cd public && npm run build",
+    "archive": "git archive HEAD -o adra-network-campaign-manager.zip"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/francoisauclair911/campaign-manager-wordpress-plugin.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/francoisauclair911/campaign-manager-wordpress-plugin/issues"
+  },
+  "homepage": "https://gitlab.com/francoisauclair911/campaign-manager-wordpress-plugin#readme"
+}
