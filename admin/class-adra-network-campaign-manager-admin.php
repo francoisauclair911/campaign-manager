@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -9,6 +8,7 @@
  * @package    Adra_Network_Campaign_Manager
  * @subpackage Adra_Network_Campaign_Manager/admin
  */
+
 
 /**
  * The admin-specific functionality of the plugin.
@@ -101,21 +101,15 @@ class Adra_Network_Campaign_Manager_Admin {
         }
 
 	}
-
-
-    private function is_develop_serve()
     
+    
+    
+    public function is_develop_serve()
     {
-        
-        if ($this->checkStatus("127.0.0.1:8080"))
+        if ( $_SERVER["HTTP_HOST"] === 'wordpress-docker.test:9911' ) {
             return true;
-        else
-            return true;
-    
+        }
         return false;
-        exit;
-        
-      
     }
     
     function checkStatus($url) {
