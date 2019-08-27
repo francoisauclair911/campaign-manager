@@ -1,7 +1,5 @@
 import Vue from "vue";
 import App from "./App.vue";
-import router from "./router";
-import store from "./store";
 import axios from 'axios'
 import lodash from 'lodash'
 
@@ -17,8 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const shortcodeData = document.querySelector('#app');
 
   new Vue({
-    router,
-    store,
     render: h => h(App),
     data() {
       return {

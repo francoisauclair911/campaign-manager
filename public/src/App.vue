@@ -1,15 +1,16 @@
 <template>
   <div id="app">
-    <div id="nav">
-    </div>
-    <router-view />
+    <campaign-manager-form></campaign-manager-form>
   </div>
 </template>
 <script>
-
+import CampaignManagerForm from './views/CampaignManagerForm'
   export default {
 
     name: 'App',
+    components: {
+      CampaignManagerForm
+    }
   }
 </script>
 <style lang="scss">

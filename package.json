@@ -7,7 +7,9 @@
     "build-all": "npm run build-admin & npm run build-public",
     "build-admin": "cd admin && npm run build",
     "build-public": "cd public && npm run build",
-    "archive": "git archive HEAD -o adra-network-campaign-manager.zip"
+    "serve-admin": "cd admin && npm run serve",
+    "serve-public": "cd public && npm run serve",
+    "archive": "git archive master -o adra-network-campaign-manager.zip"
   },
   "repository": {
     "type": "git",

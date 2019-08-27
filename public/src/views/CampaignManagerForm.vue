@@ -190,7 +190,6 @@
 
 <script>
   import vSelect from 'vue-select'
-  import 'vue-select/dist/vue-select.css';
   import { VueTelInput } from 'vue-tel-input'
 
 
@@ -408,6 +407,5 @@
         margin: 20px;
         display: inline-block;
     }
-
-
+@import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
 </style>
