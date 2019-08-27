@@ -42,43 +42,57 @@
 
             <div class="flex">
                 <div class="flex-item">
-                    <input v-model="form.first_name"
-                           name="first_name"
-                           type="text" :placeholder="attributes.first_name || placeholders.first_name">
+                        <input v-model="form.first_name"
+                               name="first_name"
+                               type="text" :placeholder="attributes.first_name || placeholders.first_name"
+                        required>
+                        <div class="error" v-text="serverResponseErrors.first_name"></div>
+
 
                 </div>
                 <div class="flex-item">
-                    <input v-model="form.last_name"
-                           name="last_name"
-                           type="text"
-                           :placeholder="attributes.last_name || placeholders.last_name">
+                        <input v-model="form.last_name"
+                               name="last_name"
+                               type="text"
+                               :placeholder="attributes.last_name || placeholders.last_name">
+                    <div class="error" v-text="serverResponseErrors.last_name"></div>
 
                 </div>
             </div>
             <div class="flex">
                 <div class="flex-item">
-                    <input v-model="form.email"
-                           name="email"
-                           type="text"
-                           :placeholder="attributes.email || placeholders.email">
+                        <input v-model="form.email"
+                               name="email"
+                               type="text"
+                               :placeholder="attributes.email || placeholders.email">
+                    <div class="error" v-text="serverResponseErrors.email"></div>
+
+
                 </div>
 
             </div>
 
             <div class="flex" v-if="attributes.enable_phone">
                 <div class="flex-item w-half">
-                    <input v-model="form.phone"
-                           name="phone"
-                           type="tel"
-                           :placeholder="attributes.phone || placeholders.phone">
+
+                    <vue-tel-input v-model="form.phone"
+                                    name="phone"
+                                   :dynamicPlaceholder="true"
+                                   mode="international"
+
+                    ></vue-tel-input>
+                    <div class="error" v-text="serverResponseErrors.phone"></div>
+
                 </div>
-                <div class="flex-item w-half" >
-                    <v-select v-model="form.communication_preference"
-                              :options="communication_preference_options"
-                              :reduce="option => option.value"
-                              label="text"
-                              :placeholder="attributes.communication_preference || placeholders.communication_preference">
-                    </v-select>
+                <div class="flex-item w-half">
+                        <v-select v-model="form.communication_preference"
+                                  :options="communication_preference_options"
+                                  :reduce="option => option.value"
+                                  label="text"
+                                  :placeholder="attributes.communication_preference || placeholders.communication_preference">
+                        </v-select>
+                    <div class="error" v-text="serverResponseErrors.communication_preference"></div>
+
                 </div>
             </div>
             <div class="flex">
@@ -88,16 +102,24 @@
                               label="country"
                               :placeholder="attributes.country || placeholders.country">
                     </v-select>
+                    <div class="error" v-text="serverResponseErrors.country"></div>
+
                 </div>
                 <div class="flex-item w-half">
-                    <input v-model="form.zip_code" type="text"
+
+                    <input v-model="form.zip_code"
+                           name="zip_code"
+                           type="text"
                            :placeholder="attributes.zip_code || placeholders.zip_code"
                            style="min-height: 54px; !important;">
+                    <div class="error" v-text="serverResponseErrors.zip_code"></div>
+
                 </div>
             </div>
             <div class="flex">
 
                 <div class="flex-item ">
+
                     <v-select v-if="interestsList"
                               v-model="form.interest"
                               :options="interestsList"
@@ -114,29 +136,38 @@
                             />
                         </template>
                     </v-select>
+                    <div class="error" v-text="serverResponseErrors.interest"></div>
+
                 </div>
             </div>
             <div class="flex age_consent">
-                <div class="flex-item " style="max-width: 1.5em">
+                <div class="flex-item " style="max-width: 1.5em; margin: 0 1em 0 0;">
+
                     <input type="checkbox"
                            v-model.numeric="form.age_consent"
                            :true-value="1"
                            :false-value="0">
                 </div>
-                <div class="flex-item flex-3-quarter" style="align-self: center; height: 43px;">
+                <div class="flex-item flex-3-quarter" style="align-self: center; height: 50px; text-align: left;">
+                    <div :class="{ error: serverResponseErrors.age_consent }">
                     {{ attributes.age_consent || placeholders.age_consent}}
+                    </div>
 
                 </div>
+
             </div>
             <div class="flex">
-                <div class="flex-item " style="max-width: 1.5em">
+                <div class="flex-item " style="max-width: 1.5em;margin: 0 1em 0 0;">
+
                     <input type="checkbox"
                            v-model.numeric="form.communication_consent"
                            :true-value="1"
                            :false-value="0">
                 </div>
-                <div class="flex-item flex-3-quarter" style="align-self: center; height: 43px;">
-                    {{ attributes.communication_consent || placeholders.communication_consent}}
+                <div class="flex-item flex-3-quarter" style="align-self: center; height: 50px; text-align: left;">
+                        {{ attributes.communication_consent || placeholders.communication_consent}}
+                    <div class="error" v-text="serverResponseErrors.communication_consent"></div>
+
                 </div>
             </div>
             <div class="flex">
@@ -147,20 +178,10 @@
                     </button>
                 </div>
             </div>
-
-            <div class="flex" v-if="serverResponse">
-                <div class="flex-item" v-if="serverResponse.errors">
-                    <div class="adra-form-error" v-for="error in serverResponse.errors">
-                        {{ error }}
-                    </div>
-
-                </div>
-            </div>
-
         </form>
         <div v-if="showThankYou && serverResponse">
-            <h1>Thanks for submitting</h1>
-            <h3>your link is</h3>
+            <h1>{{ attributes.thank_you_heading || placeholders.thank_you_heading}}</h1>
+            <h3>{{ attributes.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
             <h3>{{attributes.landing_url || currentURL }}?token={{serverResponse.token || null}}</h3>
 
         </div>
@@ -169,37 +190,40 @@
 
 <script>
   import vSelect from 'vue-select'
+  import 'vue-select/dist/vue-select.css';
+  import { VueTelInput } from 'vue-tel-input'
+
 
   export default {
 
     name: 'Home',
     components: {
       vSelect,
+      VueTelInput
     },
     data () {
       return {
-        // apiURl: '//beta.adra.org',
-        apiURl: '//adra-signup-api.test/',
+        // apiURL: '//beta.adra.org',
+        apiURL: '',
         showForm: true,
         showThankYou: false,
         attributes: null,
         countriesList: null,
         interestsList: null,
-        communication_preference_options:[
+        communication_preference_options: [
           {
             text: 'Email',
-            value : 'email'
+            value: 'email'
           },
           {
             text: 'Phone',
-            value : 'phone'
+            value: 'phone'
           }
         ],
         placeholders: {
           first_name: 'First Name',
           last_name: 'Last Name',
           email: 'Email',
-          phone: 'Phone Number',
           communication_preference: 'Communication Preference',
           country: 'Choose a Country',
           zip_code: 'Zip Code',
@@ -207,7 +231,9 @@
           communication_consent: 'I agree to receive communications from ADRA. ',
           interest: 'How would you describe your interest ?',
           country_code: null,
-          submit_button: 'Submit'
+          submit_button: 'Submit',
+          thank_you_heading: 'Thank you for your support!',
+          thank_you_subheading: 'Make sure to save your advocate link below'
         },
         form: {
           first_name: null,
@@ -226,6 +252,7 @@
           event_token: null,
         },
         serverResponse: null,
+        serverResponseErrors: {},
         submitButtonDisabled: false,
       }
 
@@ -236,21 +263,22 @@
     methods: {
       submitForm () {
         this.submitButtonDisabled = true
-        axios.post(`${this.apiURl}/api/subscriptions`, this.form).then(result => {
-          //success handling
-          console.log(result.data)
+
+        axios.post(`${this.apiURL}/api/subscriptions`, this.form).then(result => {
           this.serverResponse = result.data
           this.showForm = false
           this.showThankYou = true
 
         }).catch(error => {
-          //error handling
           this.submitButtonDisabled = false
-          console.log(error.response)
-          this.serverResponse = error.response.data
+          this.serverResponseErrors = {}
+          _.map(error.response.data.errors, function(item, key) {
+            return this.serverResponseErrors[key] = item.join()
+          }.bind(this))
 
         })
       },
+
       getParams (key) {
         const url = new URL(window.location.href)
         return url.searchParams.get(key)
@@ -268,13 +296,17 @@
       }
     },
     mounted () {
-      axios.get(`${this.apiURl}/api/assets/countries?country_code=${this.attributes.country_code}`).then((result) => {
+      this.apiURL = (process.env.NODE_ENV === 'production') ?
+        '//beta.adra.org' :
+        '//adra-signup-api.test'
+
+      axios.get(`${this.apiURL}/api/assets/countries?country_code=${this.attributes.country_code}`).then((result) => {
         this.countriesList = _.map(result.data, function (item) {
           return item.name
         })
       })
 
-      axios.get(`${this.apiURl}/api/assets/interests`).then((result) => {
+      axios.get(`${this.apiURL}/api/assets/interests`).then((result) => {
         this.interestsList = result.data
       })
 
@@ -284,7 +316,8 @@
 
       (this.pageHasReferrerToken) ? this.form.ref_token = this.getParams('token') : ''
 
-    }
+    },
+
   }
 </script>
 
@@ -295,13 +328,28 @@
         min-width: 200px;
     }
 
-
     div.adra-plugin form input {
         width: 100%;
         height: 54px;
+        color: #000;
+        outline: 0 !important;
+
     }
+
+    div.adra-plugin input[type='checkbox'] {
+        width:16px;
+        height:16px;
+        background:white;
+        border-radius:3px;
+        border:2px solid #555;
+    }
+
+    div.adra-plugin input::placeholder {
+        color: #8a8a8a !important;
+    }
+
     div.adra-plugin input.vs__search,
-    div.adra-plugin input.vs__search:focus{
+    div.adra-plugin input.vs__search:focus {
         border: 1px solid transparent !important;
         border-left: none !important;
         width: 0 !important;
@@ -309,7 +357,6 @@
         height: 44px !important;
         color: inherit !important;
     }
-
 
     div.adra-plugin div.flex {
         display: flex;
@@ -323,8 +370,9 @@
         flex: 1 0 auto;
         padding: 0.5em;
     }
-    div.adra-plugin div.w-half{
-        min-width : 50%;
+
+    div.adra-plugin div.w-half {
+        min-width: 50%;
     }
 
     div.adra-plugin div.flex-fullwidth {
@@ -341,26 +389,18 @@
 
     }
 
-    div.adra-plugin form#adra-campaign-manager input,
-    div.adra-plugin form#adra-campaign-manager  input::placeholder {
-        color: #707070c2 !important;
-    }
 
     div.adra-plugin form#adra-campaign-manager input:not('vs__search') {
         border: 1px #B4B4B4 solid !important;
         height: 55px !important;
     }
 
-
-
-    div.adra-plugin form#adra-campaign-manager span.error {
-        color: red;
+    div.adra-plugin div.error {
+        color: #ff5c52;
+        text-align: left;
     }
 
-    div.adra-plugin form#adra-campaign-manager input[type="checkbox"] {
-        height: 43px !important;
-        width: 21px;
-    }
+
 
     div.adra-plugin svg.loader {
         width: 100px;
@@ -369,6 +409,5 @@
         display: inline-block;
     }
 
-    @import url('https://unpkg.com/vue-select@latest/dist/vue-select.css');
 
 </style>
