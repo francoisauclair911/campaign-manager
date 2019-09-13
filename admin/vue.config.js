@@ -28,8 +28,8 @@ module.exports = {
     //  filename: 'js/[name].js',
       filename: 'js/[name]-admin.js',
       chunkFilename: 'js/[name]-admin.js',
-    },
-  },
+    }
+,  },
   css: {
     extract: {
       filename: 'css/[name]-admin.css',

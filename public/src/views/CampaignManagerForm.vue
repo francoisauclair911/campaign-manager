@@ -76,10 +76,10 @@
                 <div class="flex-item w-half">
 
                     <vue-tel-input v-model="form.phone"
+                                   class="input-phone"
                                     name="phone"
                                    :dynamicPlaceholder="true"
                                    mode="international"
-
                     ></vue-tel-input>
                     <div class="error" v-text="serverResponseErrors.phone"></div>
 
@@ -296,7 +296,7 @@
     },
     mounted () {
       this.apiURL = (process.env.NODE_ENV === 'production') ?
-        '//beta.adra.org' :
+        '//campaigns.adra.org' :
         '//adra-signup-api.test'
 
       axios.get(`${this.apiURL}/api/assets/countries?country_code=${this.attributes.country_code}`).then((result) => {
@@ -347,8 +347,18 @@
         color: #8a8a8a !important;
     }
 
+    div.adra-plugin div.input-phone,
+    div.adra-plugin div.vs__dropdown-toggle {
+        max-height: 54px !important;
+        height: 54px;
+    }
+
+    div.adra-plugin div.input-phone input[type="tel"] {
+        height: auto !important;
+        border: none;
+    }
     div.adra-plugin input.vs__search,
-    div.adra-plugin input.vs__search:focus {
+    div.adra-plugin input.vs__search:focus{
         border: 1px solid transparent !important;
         border-left: none !important;
         width: 0 !important;

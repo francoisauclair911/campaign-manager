@@ -1,8 +1,9 @@
 .DS_Store
-node_modules
-*.zip
+/admin/node_modules
+/public/node_modules
 
-# local env files
+/dist
+
 .env.local
 .env.*.local
 
