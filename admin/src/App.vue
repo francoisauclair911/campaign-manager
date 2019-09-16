@@ -153,7 +153,9 @@
 
       shortcodeParameters () {
         const param = _.map(this.form, (item, key) => {
-          return key + '="' + item.value + '"'
+          // return key + '="' + item.value + '"'
+          return `${key}="${item.value}"`
+          // return key + '="' + item.value + '"'
         })
         return param.join(' ')
       }

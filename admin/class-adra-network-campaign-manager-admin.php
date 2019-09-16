@@ -116,7 +116,7 @@ class Adra_Network_Campaign_Manager_Admin
     
     public function is_develop_serve()
     {
-        if ($_SERVER["HTTP_HOST"] === 'wordpress-docker.test:9911') {
+        if ($_SERVER["SERVER_NAME"] === 'wordpress-docker.test') {
             return true;
         }
         return false;
