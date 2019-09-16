@@ -1,11 +1,11 @@
 @tailwind base;
 
 .tw-adra-input {
-    @apply tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-4 tw-text-gray-700 tw-leading-tight;
+    @apply tw-shadow tw-appearance-none tw-border tw-rounded tw-w-full tw-py-2 tw-px-4 tw-text-gray-700 tw-leading-tight tw-h-10;
 }
 
 .tw-adra-label  {
-    @apply tw-block tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-2;
+    @apply tw-text-gray-700 tw-text-sm tw-font-bold tw-mb-4 border-b-2;
 }
 @tailwind components;
 @tailwind utilities;
