@@ -15,7 +15,7 @@
  * @wordpress-plugin
  * Plugin Name:       ADRA Campaign Manager Plugin
  * Plugin URI:        https://adra.org/
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Description:       Campaign Manager, Displays and Generates Form for ADRA Campaigns
  * Version:           1.0.0
  * Author:            Francois Auclair
  * Author URI:        https://adra.org/

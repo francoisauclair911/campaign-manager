@@ -90,7 +90,7 @@ class Adra_Network_Campaign_Manager_Public
 //        exit($this->arguments);
         
         if ($this->is_develop_serve()) {
-            wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:8080/css/app-public.css', [], $this->version, 'all');
+            wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:2323/css/app-public.css', [], $this->version, 'all');
         } else {
             wp_enqueue_style($this->plugin_name, plugin_dir_url(__DIR__) . 'public/dist/css/app-public.css', [], $this->version, 'all');
         }
@@ -107,7 +107,7 @@ class Adra_Network_Campaign_Manager_Public
         
         
         if ($this->is_develop_serve()) {
-            wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:8080/js/app-public.js', [], $this->version, true);
+            wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:2323/js/app-public.js', [], $this->version, true);
             
         } else {
             wp_enqueue_script($this->plugin_name . '_chunks', plugin_dir_url(__DIR__) . 'public/dist/js/chunk-vendors-public.js', [], $this->version, true);

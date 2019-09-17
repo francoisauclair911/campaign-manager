@@ -87,7 +87,7 @@ class Adra_Network_Campaign_Manager_Admin
     {
         
         if ($this->is_develop_serve()) {
-            wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:8080/css/app-admin.css', [], $this->version, 'all');
+            wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:3232/css/app-admin.css', [], $this->version, 'all');
         } else {
             wp_enqueue_style($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/dist/css/app-admin.css', [], $this->version, 'all');
         }
@@ -105,7 +105,7 @@ class Adra_Network_Campaign_Manager_Admin
         
         
         if ($this->is_develop_serve()) {
-            wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:8080/js/app-admin.js', [], $this->version, false);
+            wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:3232/js/app-admin.js', [], $this->version, false);
         } else {
             wp_enqueue_script($this->plugin_name . '_chunks', plugin_dir_url(__DIR__) . 'admin/dist/js/chunk-vendors-admin.js', [], $this->version, false);
             wp_enqueue_script($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/dist/js/app-admin.js', [], $this->version, false);
@@ -122,46 +122,5 @@ class Adra_Network_Campaign_Manager_Admin
         return false;
     }
     
-    function checkStatus($url)
-    {
-        $agent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; pt-pt) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27";
-        
-        // initializes curl session
-        $ch = curl_init();
-        
-        // sets the URL to fetch
-        curl_setopt($ch, CURLOPT_URL, $url);
-        
-        // sets the content of the User-Agent header
-        curl_setopt($ch, CURLOPT_USERAGENT, $agent);
-        
-        // make sure you only check the header - taken from the answer above
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        
-        // follow "Location: " redirects
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        
-        // return the transfer as a string
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        
-        // disable output verbose information
-        curl_setopt($ch, CURLOPT_VERBOSE, false);
-        
-        // max number of seconds to allow cURL function to execute
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        
-        // execute
-        curl_exec($ch);
-        
-        // get HTTP response code
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        
-        curl_close($ch);
-        
-        if ($httpcode >= 200 && $httpcode < 300)
-            return true;
-        else
-            return false;
-    }
     
 }

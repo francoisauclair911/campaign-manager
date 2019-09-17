@@ -177,12 +177,19 @@
                         {{ attributes.submit_button || placeholders.submit_button }}
                     </button>
                 </div>
+
+            </div>
+            <div class="flex">
+                <div class="error" v-text="serverResponseErrors.organization_token"></div>
+                <div class="error" v-text="serverResponseErrors.campaign_token"></div>
+                <div class="error" v-text="serverResponseErrors.event_token"></div>
+
             </div>
         </form>
         <div v-if="showThankYou && serverResponse">
             <h1>{{ attributes.thank_you_heading || placeholders.thank_you_heading}}</h1>
             <h3>{{ attributes.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
-            <h3>{{attributes.landing_url || currentURL }}?token={{serverResponse.token || null}}</h3>
+            <p>{{attributes.landing_url || currentURL }}?token={{serverResponse.token || null}}</p>
 
         </div>
     </div>
@@ -202,7 +209,6 @@
     },
     data () {
       return {
-        // apiURL: '//beta.adra.org',
         apiURL: '',
         showForm: true,
         showThankYou: false,
@@ -271,7 +277,7 @@
         }).catch(error => {
           this.submitButtonDisabled = false
           this.serverResponseErrors = {}
-          _.map(error.response.data.errors, function(item, key) {
+          lodash.map(error.response.data.errors, function(item, key) {
             return this.serverResponseErrors[key] = item.join()
           }.bind(this))
 
@@ -288,7 +294,7 @@
         return `${location.protocol}//${location.host}${location.pathname}`
       },
       selectFieldsReady () {
-        return !(_.isEmpty(this.countriesList) && _.isEmpty(this.interestsList))
+        return !(lodash.isEmpty(this.countriesList) && lodash.isEmpty(this.interestsList))
       },
       pageHasReferrerToken () {
         return (!!(this.getParams('token')))
@@ -299,8 +305,9 @@
         '//campaigns.adra.org' :
         '//adra-signup-api.test'
 
-      axios.get(`${this.apiURL}/api/assets/countries?country_code=${this.attributes.country_code}`).then((result) => {
-        this.countriesList = _.map(result.data, function (item) {
+      axios.get(`${this.apiURL}/api/assets/countries?country_code=${this.attributes.country_code}`)
+        .then((result) => {
+        this.countriesList = lodash.map(result.data, function (item) {
           return item.name
         })
       })
@@ -325,6 +332,18 @@
 
     div.adra-plugin form button.adra-form-submit {
         min-width: 200px;
+        min-height: 50px;
+        width: 250px;
+        text-align: center;
+        display: inline-block;
+        border: none;
+        background-color: #7FBC42;
+        color: white;
+        font-weight: 700;
+        font-size: 1.3rem;
+        padding: 10px 10px;
+        box-shadow: #00000061 1px 1px 8px;
+        text-transform: uppercase;
     }
 
     div.adra-plugin form input {
@@ -351,6 +370,7 @@
     div.adra-plugin div.vs__dropdown-toggle {
         max-height: 54px !important;
         height: 54px;
+         background: white !important;
     }
 
     div.adra-plugin div.input-phone input[type="tel"] {

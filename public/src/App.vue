@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import CampaignManagerForm from './views/CampaignManagerForm'
+  import CampaignManagerForm from './views/CampaignManagerForm'
   export default {
 
     name: 'App',

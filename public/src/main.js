@@ -1,11 +1,12 @@
 import Vue from "vue";
 import App from "./App.vue";
 import axios from 'axios'
+
 import lodash from 'lodash'
 
 
 window.axios = axios
-window._ = lodash
+window.lodash = lodash.noConflict();
 
 
 Vue.config.productionTip = false;

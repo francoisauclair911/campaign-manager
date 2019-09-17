@@ -4,7 +4,7 @@ module.exports = {
    // ? '/wp-content/plugins/adra-network-campaign-manager/dist/'
     ? '/wp-content/plugins/adra-network-campaign-manager/admin/dist/'
 
-    : 'http://localhost:8080/',
+    : 'http://localhost:3232/',
  // outputDir: '../dist',
   outputDir: './dist',
   configureWebpack: {
@@ -16,7 +16,8 @@ module.exports = {
       },
      // contentBase: '/wp-content/plugins/adra-network-campaign-manager/dist/',
       contentBase: '/wp-content/plugins/adra-network-campaign-manager/admin/dist/',
-      allowedHosts: ['wordpress-docker.test:9911'],
+      // allowedHosts: ['wordpress-docker.test:9911'],
+      allowedHosts: ['wordpress-docker.test'],
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
