@@ -50,19 +50,22 @@ class Adra_Network_Campaign_Manager_Admin
      */
     public function __construct($plugin_name, $version)
     {
-        
         $this->plugin_name = $plugin_name;
         $this->version = $version;
-        
     }
     
     
     function my_plugin_menu()
     {
+        if ($this->is_develop_serve()) {
+            $capacity = 'edit_pages';
+        } else {
+            $capacity = 'translate';
+        }
         add_menu_page(
             'Campaign Manager',
             'Campaign Manager',
-            'edit_pages',
+            $capacity,
             'adra-network-campaign-manager',
             [$this, 'my_plugin_options'],
             'dashicons-megaphone'
@@ -71,9 +74,6 @@ class Adra_Network_Campaign_Manager_Admin
     
     function my_plugin_options()
     {
-//        if (!current_user_can('manage_options')) {
-//            wp_die(__('You do not have sufficient permissions to access this page.'));
-//        }
         echo '<div id="app"></div>';
     }
     
@@ -83,14 +83,15 @@ class Adra_Network_Campaign_Manager_Admin
      *
      * @since    1.0.0
      */
-    public function enqueue_styles()
+    public function enqueue_styles($hook)
     {
-        
-        if ($this->is_develop_serve()) {
-            wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:3232/css/app-admin.css', [], $this->version, 'all');
-        } else {
-            wp_enqueue_style($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/dist/css/app-admin.css', [], $this->version, 'all');
+        if ($hook != 'toplevel_page_adra-network-campaign-manager') {
+            return;
         }
+        if ($this->is_develop_serve()) {
+            return wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:3232/css/app-admin.css', [], $this->version, 'all');
+        }
+        return wp_enqueue_style($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/dist/css/app-admin.css', [], $this->version, 'all');
         
         
     }
@@ -99,10 +100,13 @@ class Adra_Network_Campaign_Manager_Admin
      * Register the JavaScript for the admin area.
      *
      * @since    1.0.0
+     * @param $hook
      */
-    public function enqueue_scripts()
+    public function enqueue_scripts($hook)
     {
-        
+        if ($hook != 'toplevel_page_adra-network-campaign-manager') {
+            return;
+        }
         
         if ($this->is_develop_serve()) {
             wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:3232/js/app-admin.js', [], $this->version, false);

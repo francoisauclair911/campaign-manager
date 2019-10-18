@@ -97,9 +97,11 @@
             </div>
             <div class="flex">
                 <div class="flex-item w-half">
-                    <v-select v-if="countriesList" v-model="form.country"
+                    <v-select v-if="countriesList"
                               :options="countriesList"
-                              label="country"
+                              label="name"
+                              :reduce="country => country.id"
+                              @input="updateCountry"
                               :placeholder="attributes.country || placeholders.country">
                     </v-select>
                     <div class="error" v-text="serverResponseErrors.country"></div>
@@ -121,10 +123,11 @@
                 <div class="flex-item ">
 
                     <v-select v-if="interestsList"
-                              v-model="form.interest"
+                              @input="updateInterest"
                               :options="interestsList"
                               name="interest"
-                              label="interest"
+                              label="label"
+                              :reduce="interest => parseInt(interest.code)"
                               :placeholder="attributes.interest || placeholders.interest"
                     >
                         <template #search="{attributes, events}">
@@ -140,38 +143,38 @@
 
                 </div>
             </div>
-            <div class="flex age_consent">
-                <div class="flex-item " style="max-width: 1.5em; margin: 0 1em 0 0;">
-
+            <div class="flex" style="text-align: left">
+                <div class="flex-item">
                     <input type="checkbox"
+                           style="vertical-align: text-bottom;"
                            v-model.numeric="form.age_consent"
                            :true-value="1"
                            :false-value="0">
-                </div>
-                <div class="flex-item flex-3-quarter" style="align-self: center; height: 50px; text-align: left;">
-                    <div :class="{ error: serverResponseErrors.age_consent }">
-                    {{ attributes.age_consent || placeholders.age_consent}}
-                    </div>
 
+                    <span :class="{ error: serverResponseErrors.age_consent }">
+                         {{ attributes.age_consent || placeholders.age_consent}}
+                    </span>
                 </div>
+
 
             </div>
-            <div class="flex">
-                <div class="flex-item " style="max-width: 1.5em;margin: 0 1em 0 0;">
+            <div class="flex" style="text-align: left">
+                <div class="flex-item">
 
                     <input type="checkbox"
+                           style="vertical-align: text-bottom;"
                            v-model.numeric="form.communication_consent"
                            :true-value="1"
                            :false-value="0">
-                </div>
-                <div class="flex-item flex-3-quarter" style="align-self: center; height: 50px; text-align: left;">
-                        {{ attributes.communication_consent || placeholders.communication_consent}}
+
+                    <span>{{ attributes.communication_consent || placeholders.communication_consent}}</span>
                     <div class="error" v-text="serverResponseErrors.communication_consent"></div>
 
                 </div>
+
             </div>
-            <div class="flex">
-                <div class="flex-item" style="text-align: center;">
+            <div class="flex" style="margin-top: 1em; justify-content: center">
+                    <div class="flex-item" style="flex: 0 1 250px; text-align: center;">
                     <button class="adra-form-submit" :disabled="submitButtonDisabled"
                             @click.prevent="submitForm">
                         {{ attributes.submit_button || placeholders.submit_button }}
@@ -246,11 +249,13 @@
           email: null,
           phone: null,
           country: null,
+          country_id: null,
           zip_code: null,
           age_consent: 0,
           communication_consent: 0,
           communication_preference: null,
           interest: null,
+          interest_id: null,
           ref_token: null,
           campaign_token: null,
           organization_token: null,
@@ -266,9 +271,31 @@
       this.attributes = this.$root.$data.shortcodeAttributes
     },
     methods: {
+      setData() {
+        this.apiURL = (process.env.NODE_ENV === 'production') ?
+          '//campaigns.adra.org' :
+          '//adra-signup-api.test'
+        this.form.campaign_token = this.attributes.campaign_token || null
+        this.form.event_token = this.attributes.event_token || null
+        this.form.organization_token = this.attributes.organization_token || null;
+        (this.pageHasReferrerToken) ? this.form.ref_token = this.getParams('token') : ''
+
+      },
+      fetchCountries() {
+        axios.get(`${this.apiURL}/api/assets/countries/${this.attributes.country_code}`)
+          .then((result) => {
+            this.countriesList = result.data
+          })
+      },
+      fetchInterests() {
+        axios.get(`${this.apiURL}/api/assets/interests/${this.attributes.language_code}`).then((result) => {
+          this.interestsList = lodash.map(result.data, (interest, key) => {
+            return {label:interest, code:key};
+          })
+        })
+      },
       submitForm () {
         this.submitButtonDisabled = true
-
         axios.post(`${this.apiURL}/api/subscriptions`, this.form).then(result => {
           this.serverResponse = result.data
           this.showForm = false
@@ -277,6 +304,7 @@
         }).catch(error => {
           this.submitButtonDisabled = false
           this.serverResponseErrors = {}
+
           lodash.map(error.response.data.errors, function(item, key) {
             return this.serverResponseErrors[key] = item.join()
           }.bind(this))
@@ -287,8 +315,17 @@
       getParams (key) {
         const url = new URL(window.location.href)
         return url.searchParams.get(key)
-      }
+      },
+      updateInterest(value) {
+        this.form.interest = this.interestsList[value - 1].label // offset the array
+        this.form.interest_id = value;
+      },
+      updateCountry(value) {
+        this.form.country = lodash.find(this.countriesList, function(country) { return country.id === value; }).name
+        this.form.country_id = value;
+      },
     },
+
     computed: {
       currentURL () {
         return `${location.protocol}//${location.host}${location.pathname}`
@@ -301,27 +338,9 @@
       }
     },
     mounted () {
-      this.apiURL = (process.env.NODE_ENV === 'production') ?
-        '//campaigns.adra.org' :
-        '//adra-signup-api.test'
-
-      axios.get(`${this.apiURL}/api/assets/countries?country_code=${this.attributes.country_code}`)
-        .then((result) => {
-        this.countriesList = lodash.map(result.data, function (item) {
-          return item.name
-        })
-      })
-
-      axios.get(`${this.apiURL}/api/assets/interests`).then((result) => {
-        this.interestsList = result.data
-      })
-
-      this.form.campaign_token = this.attributes.campaign_token || null
-      this.form.event_token = this.attributes.event_token || null
-      this.form.organization_token = this.attributes.organization_token || null;
-
-      (this.pageHasReferrerToken) ? this.form.ref_token = this.getParams('token') : ''
-
+      this.setData();
+      this.fetchCountries();
+      this.fetchInterests();
     },
 
   }
@@ -331,9 +350,10 @@
 <style lang="css">
 
     div.adra-plugin form button.adra-form-submit {
-        min-width: 200px;
-        min-height: 50px;
-        width: 250px;
+        /*min-width: 200px;*/
+        /*min-height: 50px;*/
+        /*width: 250px;*/
+        width: 100%;
         text-align: center;
         display: inline-block;
         border: none;
@@ -360,6 +380,7 @@
         background:white;
         border-radius:3px;
         border:2px solid #555;
+        margin-right: 0.5em;
     }
 
     div.adra-plugin input::placeholder {
@@ -396,7 +417,7 @@
     }
 
     div.adra-plugin div.flex-item {
-        flex: 1 0 auto;
+        flex: 1 1 auto;
         padding: 0.5em;
     }
 
@@ -424,7 +445,7 @@
         height: 55px !important;
     }
 
-    div.adra-plugin div.error {
+    div.adra-plugin .error {
         color: #ff5c52;
         text-align: left;
     }

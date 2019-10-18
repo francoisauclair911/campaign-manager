@@ -154,6 +154,10 @@
             label: 'Your country code (3 letters), this allows your country to be on top of the select list',
             value: ''
           },
+          language_code: {
+            label: 'Your language code (2 letters), this allows your to fetch the translate name of the interests list',
+            value: ''
+          },
           landing_url: {
             label: 'The URL where the form (shortcode) is present, will be used to generate the new user referral link',
             value: '',

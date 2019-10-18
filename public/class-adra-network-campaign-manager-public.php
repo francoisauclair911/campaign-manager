@@ -44,6 +44,8 @@ class Adra_Network_Campaign_Manager_Public
     
     protected $args;
     
+    private $shortcode_name;
+    
     /**
      * Initialize the class and set its properties.
      *
@@ -56,6 +58,7 @@ class Adra_Network_Campaign_Manager_Public
         
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+        $this->shortcode_name = 'campaign-manager';
         
         add_shortcode('campaign-manager', [$this, 'render_frontend']);
         
@@ -87,8 +90,9 @@ class Adra_Network_Campaign_Manager_Public
      */
     public function enqueue_styles()
     {
-//        exit($this->arguments);
-        
+        if (!$this->is_shortcode_present()){
+            return;
+        }
         if ($this->is_develop_serve()) {
             wp_enqueue_style($this->plugin_name . '_dev', 'http://localhost:2323/css/app-public.css', [], $this->version, 'all');
         } else {
@@ -105,22 +109,30 @@ class Adra_Network_Campaign_Manager_Public
     public function enqueue_scripts()
     {
         
-        
+        if (!$this->is_shortcode_present()){
+            return;
+        }
         if ($this->is_develop_serve()) {
-            wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:2323/js/app-public.js', [], $this->version, true);
-            
-        } else {
+            return  wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:2323/js/app-public.js', [], $this->version, true);
+    
+        }
+        if ($this->is_shortcode_present()) {
             wp_enqueue_script($this->plugin_name . '_chunks', plugin_dir_url(__DIR__) . 'public/dist/js/chunk-vendors-public.js', [], $this->version, true);
             wp_enqueue_script($this->plugin_name, plugin_dir_url(__DIR__) . 'public/dist/js/app-public.js', [], $this->version, true);
         }
         
+        return;
+        
         
     }
     
+    public function is_shortcode_present() {
+        global $post;
+        return has_shortcode( $post->post_content, $this->shortcode_name);
+    }
     
     private function is_develop_serve()
     {
-//            var_dump($_SERVER);
         if ($_SERVER["SERVER_NAME"] === 'wordpress-docker.test') {
             return true;
         }
