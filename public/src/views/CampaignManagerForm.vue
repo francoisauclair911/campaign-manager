@@ -42,29 +42,29 @@
 
             <div class="flex">
                 <div class="flex-item">
-                        <input v-model="form.first_name"
-                               name="first_name"
-                               type="text" :placeholder="attributes.first_name || placeholders.first_name"
-                        required>
-                        <div class="error" v-text="serverResponseErrors.first_name"></div>
+                    <input v-model="form.first_name"
+                           name="first_name"
+                           type="text" :placeholder="attributes.first_name || placeholders.first_name"
+                           required>
+                    <div class="error" v-text="serverResponseErrors.first_name"></div>
 
 
                 </div>
                 <div class="flex-item">
-                        <input v-model="form.last_name"
-                               name="last_name"
-                               type="text"
-                               :placeholder="attributes.last_name || placeholders.last_name">
+                    <input v-model="form.last_name"
+                           name="last_name"
+                           type="text"
+                           :placeholder="attributes.last_name || placeholders.last_name">
                     <div class="error" v-text="serverResponseErrors.last_name"></div>
 
                 </div>
             </div>
             <div class="flex">
                 <div class="flex-item">
-                        <input v-model="form.email"
-                               name="email"
-                               type="text"
-                               :placeholder="attributes.email || placeholders.email">
+                    <input v-model="form.email"
+                           name="email"
+                           type="text"
+                           :placeholder="attributes.email || placeholders.email">
                     <div class="error" v-text="serverResponseErrors.email"></div>
 
 
@@ -75,22 +75,26 @@
             <div class="flex" v-if="attributes.enable_phone">
                 <div class="flex-item w-half">
 
-                    <vue-tel-input v-model="form.phone"
+                    <vue-tel-input v-if="countriesList"
+                                   v-model="form.phone"
                                    class="input-phone"
-                                    name="phone"
+                                   @blur="formatPhone"
+                                   :disabledFormatting="true"
+                                   name="phone"
                                    :dynamicPlaceholder="true"
                                    mode="international"
+                                   :preferredCountries="[countriesList[0]['alpha2Code']]"
                     ></vue-tel-input>
                     <div class="error" v-text="serverResponseErrors.phone"></div>
 
                 </div>
                 <div class="flex-item w-half">
-                        <v-select v-model="form.communication_preference"
-                                  :options="communication_preference_options"
-                                  :reduce="option => option.value"
-                                  label="text"
-                                  :placeholder="attributes.communication_preference || placeholders.communication_preference">
-                        </v-select>
+                    <v-select v-model="form.communication_preference"
+                              :options="communication_preference_options"
+                              :reduce="option => option.value"
+                              label="text"
+                              :placeholder="attributes.communication_preference || placeholders.communication_preference">
+                    </v-select>
                     <div class="error" v-text="serverResponseErrors.communication_preference"></div>
 
                 </div>
@@ -101,7 +105,7 @@
                               :options="countriesList"
                               label="name"
                               :reduce="country => country.id"
-                              @input="updateCountry"
+                                v-model="form.country_id"
                               :placeholder="attributes.country || placeholders.country">
                     </v-select>
                     <div class="error" v-text="serverResponseErrors.country"></div>
@@ -123,7 +127,7 @@
                 <div class="flex-item ">
 
                     <v-select v-if="interestsList"
-                              @input="updateInterest"
+                              v-model="form.interest_id"
                               :options="interestsList"
                               name="interest"
                               label="label"
@@ -174,7 +178,7 @@
 
             </div>
             <div class="flex" style="margin-top: 1em; justify-content: center">
-                    <div class="flex-item" style="flex: 0 1 250px; text-align: center;">
+                <div class="flex-item" style="flex: 0 1 250px; text-align: center;">
                     <button class="adra-form-submit" :disabled="submitButtonDisabled"
                             @click.prevent="submitForm">
                         {{ attributes.submit_button || placeholders.submit_button }}
@@ -201,7 +205,6 @@
 <script>
   import vSelect from 'vue-select'
   import { VueTelInput } from 'vue-tel-input'
-
 
   export default {
 
@@ -248,13 +251,11 @@
           last_name: null,
           email: null,
           phone: null,
-          country: null,
           country_id: null,
           zip_code: null,
           age_consent: 0,
           communication_consent: 0,
           communication_preference: null,
-          interest: null,
           interest_id: null,
           ref_token: null,
           campaign_token: null,
@@ -271,9 +272,9 @@
       this.attributes = this.$root.$data.shortcodeAttributes
     },
     methods: {
-      setData() {
+      setData () {
         this.apiURL = (process.env.NODE_ENV === 'production') ?
-          '//campaigns.adra.org' :
+          '//campaigns.adra.cloud' :
           '//adra-signup-api.test'
         this.form.campaign_token = this.attributes.campaign_token || null
         this.form.event_token = this.attributes.event_token || null
@@ -281,17 +282,26 @@
         (this.pageHasReferrerToken) ? this.form.ref_token = this.getParams('token') : ''
 
       },
-      fetchCountries() {
+      fetchCountries () {
+        if (localStorage.getItem('countriesList')) {
+          return this.countriesList = JSON.parse(localStorage.getItem('countriesList'))
+        }
         axios.get(`${this.apiURL}/api/assets/countries/${this.attributes.country_code}`)
           .then((result) => {
             this.countriesList = result.data
+            return localStorage.setItem('countriesList', JSON.stringify(result.data))
+
           })
       },
-      fetchInterests() {
+      fetchInterests () {
+        if (localStorage.getItem('interestsList')) {
+          return this.interestsList = JSON.parse(localStorage.getItem('interestsList'))
+        }
         axios.get(`${this.apiURL}/api/assets/interests/${this.attributes.language_code}`).then((result) => {
           this.interestsList = lodash.map(result.data, (interest, key) => {
-            return {label:interest, code:key};
+            return {label: interest, code: key}
           })
+          return localStorage.setItem('interestsList', JSON.stringify(this.interestsList))
         })
       },
       submitForm () {
@@ -305,7 +315,7 @@
           this.submitButtonDisabled = false
           this.serverResponseErrors = {}
 
-          lodash.map(error.response.data.errors, function(item, key) {
+          lodash.map(error.response.data.errors, function (item, key) {
             return this.serverResponseErrors[key] = item.join()
           }.bind(this))
 
@@ -316,17 +326,18 @@
         const url = new URL(window.location.href)
         return url.searchParams.get(key)
       },
-      updateInterest(value) {
-        this.form.interest = this.interestsList[value - 1].label // offset the array
-        this.form.interest_id = value;
-      },
-      updateCountry(value) {
-        this.form.country = lodash.find(this.countriesList, function(country) { return country.id === value; }).name
-        this.form.country_id = value;
+      formatPhone(value){
+        if (!this.form.phone) {
+          return
+        }
+       this.form.phone = this.form.phone.replace(/-|\s/g,'');
+       console.log('BLUR', this.form.phone)
       },
     },
 
     computed: {
+
+
       currentURL () {
         return `${location.protocol}//${location.host}${location.pathname}`
       },
@@ -338,9 +349,9 @@
       }
     },
     mounted () {
-      this.setData();
-      this.fetchCountries();
-      this.fetchInterests();
+      this.setData()
+      this.fetchCountries()
+      this.fetchInterests()
     },
 
   }
@@ -375,11 +386,11 @@
     }
 
     div.adra-plugin input[type='checkbox'] {
-        width:16px;
-        height:16px;
-        background:white;
-        border-radius:3px;
-        border:2px solid #555;
+        width: 16px;
+        height: 16px;
+        background: white;
+        border-radius: 3px;
+        border: 2px solid #555;
         margin-right: 0.5em;
     }
 
@@ -391,15 +402,16 @@
     div.adra-plugin div.vs__dropdown-toggle {
         max-height: 54px !important;
         height: 54px;
-         background: white !important;
+        background: white !important;
     }
 
     div.adra-plugin div.input-phone input[type="tel"] {
         height: auto !important;
         border: none;
     }
+
     div.adra-plugin input.vs__search,
-    div.adra-plugin input.vs__search:focus{
+    div.adra-plugin input.vs__search:focus {
         border: 1px solid transparent !important;
         border-left: none !important;
         width: 0 !important;
@@ -439,7 +451,6 @@
 
     }
 
-
     div.adra-plugin form#adra-campaign-manager input:not('vs__search') {
         border: 1px #B4B4B4 solid !important;
         height: 55px !important;
@@ -450,13 +461,12 @@
         text-align: left;
     }
 
-
-
     div.adra-plugin svg.loader {
         width: 100px;
         height: 100px;
         margin: 20px;
         display: inline-block;
     }
-@import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
+
+    @import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
 </style>

@@ -4,6 +4,9 @@ import axios from 'axios'
 
 import lodash from 'lodash'
 
+import {checkLocalStorageExpiry} from './helper'
+
+checkLocalStorageExpiry();
 
 window.axios = axios
 window.lodash = lodash.noConflict();
