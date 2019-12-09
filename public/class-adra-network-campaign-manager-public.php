@@ -133,7 +133,7 @@ class Adra_Network_Campaign_Manager_Public
     
     private function is_develop_serve()
     {
-        if ($_SERVER["SERVER_NAME"] === 'wordpress-docker.test') {
+        if (getenv('APPLICATION_ENV') === 'development') {
             return true;
         }
         return false;

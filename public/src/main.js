@@ -2,7 +2,12 @@ import Vue from "vue";
 import App from "./App.vue";
 import axios from 'axios'
 
+
 import lodash from 'lodash'
+import 'purecss/build/base-min.css'
+import 'purecss/build/grids-responsive-min.css'
+import 'vue-select/dist/vue-select.css'
+
 
 import {checkLocalStorageExpiry} from './helper'
 
@@ -15,6 +20,7 @@ window.lodash = lodash.noConflict();
 Vue.config.productionTip = false;
 
 Vue.config.devtools =  (process.env.NODE_ENV === 'development')
+// Vue.config.devtools =  true;
 
 document.addEventListener('DOMContentLoaded', () => {
   const shortcodeData = document.querySelector('#app');

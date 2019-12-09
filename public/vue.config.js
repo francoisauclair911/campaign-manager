@@ -10,6 +10,7 @@ module.exports = {
   configureWebpack: {
     devServer: {
       host: 'localhost',
+      // https: true,
       disableHostCheck: true,
       watchOptions: {
         poll: true
@@ -18,7 +19,7 @@ module.exports = {
       contentBase: '/wp-content/plugins/adra-network-campaign-manager/public/dist/',
 
       // allowedHosts: ['wordpress-docker.test:9911'],
-      allowedHosts: ['wordpress-docker.test'],
+      allowedHosts: ['wp-dev.loc'],
       headers: {
         'Access-Control-Allow-Origin': '*'
       },

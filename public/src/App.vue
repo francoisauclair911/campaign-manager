@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <campaign-manager-form></campaign-manager-form>
+
+    <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>
   </div>
 </template>
 <script>
@@ -10,6 +11,16 @@
     name: 'App',
     components: {
       CampaignManagerForm
+    },
+    mounted() {
+
+    },
+    computed: {
+      isLocal() {
+        const possibleLocalDomains = ['local', 'loc', 'test', 'dev'];
+        const currentDomain = window.location.origin.split('.').pop();
+        return possibleLocalDomains.includes(currentDomain);
+      }
     }
   }
 </script>

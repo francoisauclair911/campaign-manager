@@ -2,35 +2,7 @@
     <div class="adra-plugin">
 
         <div class="flex" v-show="!selectFieldsReady">
-            <div class="flex-item">
-                <svg class="loader" version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-  viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
-  <circle fill="#000" stroke="none" cx="6" cy="50" r="6">
-    <animate
-      attributeName="opacity"
-      dur="1s"
-      values="0;1;0"
-      repeatCount="indefinite"
-      begin="0.1"/>
-  </circle>
-  <circle fill="#000" stroke="none" cx="26" cy="50" r="6">
-    <animate
-      attributeName="opacity"
-      dur="1s"
-      values="0;1;0"
-      repeatCount="indefinite"
-      begin="0.2"/>
-  </circle>
-  <circle fill="#000" stroke="none" cx="46" cy="50" r="6">
-    <animate
-      attributeName="opacity"
-      dur="1s"
-      values="0;1;0"
-      repeatCount="indefinite"
-      begin="0.3"/>
-  </circle>
-</svg>
-            </div>
+            <SpinnerLoader/>
         </div>
 
         <form class="adra-campaign-manager-form"
@@ -40,27 +12,44 @@
               v-show="selectFieldsReady"
         >
 
-            <div class="flex">
-                <div class="flex-item">
+            <div class="pure-g">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <input v-model="form.first_name"
                            name="first_name"
                            type="text" :placeholder="attributes.first_name || placeholders.first_name"
                            required>
                     <div class="error" v-text="serverResponseErrors.first_name"></div>
 
-
                 </div>
-                <div class="flex-item">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <input v-model="form.last_name"
                            name="last_name"
                            type="text"
                            :placeholder="attributes.last_name || placeholders.last_name">
                     <div class="error" v-text="serverResponseErrors.last_name"></div>
-
                 </div>
             </div>
-            <div class="flex">
-                <div class="flex-item">
+            <!--<div class="pure-g">-->
+                <!--<div class="flex-item">-->
+                    <!--<input v-model="form.first_name"-->
+                           <!--name="first_name"-->
+                           <!--type="text" :placeholder="attributes.first_name || placeholders.first_name"-->
+                           <!--required>-->
+                    <!--<div class="error" v-text="serverResponseErrors.first_name"></div>-->
+
+
+                <!--</div>-->
+                <!--<div class="flex-item">-->
+                    <!--<input v-model="form.last_name"-->
+                           <!--name="last_name"-->
+                           <!--type="text"-->
+                           <!--:placeholder="attributes.last_name || placeholders.last_name">-->
+                    <!--<div class="error" v-text="serverResponseErrors.last_name"></div>-->
+
+                <!--</div>-->
+            <!--</div>-->
+            <div class="pure-g">
+                <div class="pure-u-1 l-box">
                     <input v-model="form.email"
                            name="email"
                            type="text"
@@ -72,10 +61,11 @@
 
             </div>
 
-            <div class="flex" v-if="attributes.enable_phone">
-                <div class="flex-item w-half">
+            <div class="pure-g" v-if="attributes.enable_phone">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
 
                     <vue-tel-input v-if="countriesList"
+                                   inputId="tel-input"
                                    v-model="form.phone"
                                    class="input-phone"
                                    @blur="formatPhone"
@@ -88,7 +78,7 @@
                     <div class="error" v-text="serverResponseErrors.phone"></div>
 
                 </div>
-                <div class="flex-item w-half">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <v-select v-model="form.communication_preference"
                               :options="communication_preference_options"
                               :reduce="option => option.value"
@@ -99,19 +89,19 @@
 
                 </div>
             </div>
-            <div class="flex">
-                <div class="flex-item w-half">
+            <div class="pure-g">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <v-select v-if="countriesList"
                               :options="countriesList"
                               label="name"
                               :reduce="country => country.id"
-                                v-model="form.country_id"
+                              v-model="form.country_id"
                               :placeholder="attributes.country || placeholders.country">
                     </v-select>
                     <div class="error" v-text="serverResponseErrors.country"></div>
 
                 </div>
-                <div class="flex-item w-half">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
 
                     <input v-model="form.zip_code"
                            name="zip_code"
@@ -122,9 +112,9 @@
 
                 </div>
             </div>
-            <div class="flex">
+            <div class="pure-g">
 
-                <div class="flex-item ">
+                <div class="pure-u-1 l-box">
 
                     <v-select v-if="interestsList"
                               v-model="form.interest_id"
@@ -147,8 +137,8 @@
 
                 </div>
             </div>
-            <div class="flex" style="text-align: left">
-                <div class="flex-item">
+            <div class="pure-g" style="text-align: left">
+                <div class="pure-u-1 l-box">
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
                            v-model.numeric="form.age_consent"
@@ -162,8 +152,8 @@
 
 
             </div>
-            <div class="flex" style="text-align: left">
-                <div class="flex-item">
+            <div class="pure-g" style="text-align: left">
+                <div class="pure-u-1 l-box">
 
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
@@ -177,20 +167,20 @@
                 </div>
 
             </div>
-            <div class="flex" style="margin-top: 1em; justify-content: center">
-                <div class="flex-item" style="flex: 0 1 250px; text-align: center;">
-                    <button class="adra-form-submit" :disabled="submitButtonDisabled"
+            <div class="pure-g" style="margin-top: 1em; justify-content: center">
+                <div class="pure-u-1 pure-u-md-1-4 l-box" style="flex: 0 1 250px; text-align: center;">
+                    <button class="adra-form-submit"
+                            :disabled="submitButtonDisabled"
                             @click.prevent="submitForm">
                         {{ attributes.submit_button || placeholders.submit_button }}
                     </button>
                 </div>
 
             </div>
-            <div class="flex">
+            <div class="pure-g">
                 <div class="error" v-text="serverResponseErrors.organization_token"></div>
                 <div class="error" v-text="serverResponseErrors.campaign_token"></div>
                 <div class="error" v-text="serverResponseErrors.event_token"></div>
-
             </div>
         </form>
         <div v-if="showThankYou && serverResponse">
@@ -205,13 +195,21 @@
 <script>
   import vSelect from 'vue-select'
   import { VueTelInput } from 'vue-tel-input'
+  import SpinnerLoader from './SpinnerLoader'
 
   export default {
 
-    name: 'Home',
+    name: 'CampaignManagerForm',
     components: {
+      SpinnerLoader,
       vSelect,
       VueTelInput
+    },
+    props: {
+      isLocal: {
+        type: Boolean,
+        default: false
+      }
     },
     data () {
       return {
@@ -266,55 +264,65 @@
         serverResponseErrors: {},
         submitButtonDisabled: false,
       }
-
     },
     created () {
       this.attributes = this.$root.$data.shortcodeAttributes
     },
+    mounted () {
+      this.setData()
+      this.getCountriesList()
+      this.getInterestsList()
+    },
+
     methods: {
       setData () {
-        this.apiURL = (process.env.NODE_ENV === 'production') ?
-          '//campaigns.adra.cloud' :
-          '//adra-signup-api.test'
-        this.form.campaign_token = this.attributes.campaign_token || null
-        this.form.event_token = this.attributes.event_token || null
-        this.form.organization_token = this.attributes.organization_token || null;
-        (this.pageHasReferrerToken) ? this.form.ref_token = this.getParams('token') : ''
-
+        this.apiURL = (this.isLocal) ?
+          'https://campaign-manager.loc' :
+          'https://campaigns.adra.cloud'
+        this.form.campaign_token = this.getParams('campaign_token') || this.attributes.campaign_token || null
+        this.form.event_token = this.getParams('event_token') || this.attributes.event_token || null
+        this.form.organization_token = this.getParams('organization_token') || this.attributes.organization_token || null
+        this.form.ref_token = this.getParams('token')
       },
-      fetchCountries () {
-        if (localStorage.getItem('countriesList')) {
-          return this.countriesList = JSON.parse(localStorage.getItem('countriesList'))
+
+      getCountriesList () {
+        const cacheName = `countries-lists-${this.attributes.country_code || 'default'}`
+        if (localStorage.getItem(cacheName)) {
+          return this.countriesList = JSON.parse(localStorage.getItem(cacheName))
         }
-        axios.get(`${this.apiURL}/api/assets/countries/${this.attributes.country_code}`)
+
+        axios.get(`${this.apiURL}/api/assets/countries/${this.attributes.country_code || '' }`)
           .then((result) => {
             this.countriesList = result.data
-            return localStorage.setItem('countriesList', JSON.stringify(result.data))
+            return localStorage.setItem(cacheName, JSON.stringify(result.data))
 
           })
       },
-      fetchInterests () {
-        if (localStorage.getItem('interestsList')) {
-          return this.interestsList = JSON.parse(localStorage.getItem('interestsList'))
+
+      getInterestsList () {
+        const cacheName = `interests-lists-${this.attributes.language_code || 'default'}`
+        if (localStorage.getItem(cacheName)) {
+          return this.interestsList = JSON.parse(localStorage.getItem(cacheName))
         }
-        axios.get(`${this.apiURL}/api/assets/interests/${this.attributes.language_code}`).then((result) => {
-          this.interestsList = lodash.map(result.data, (interest, key) => {
-            return {label: interest, code: key}
+
+        axios.get(`${this.apiURL}/api/assets/interests/${ this.attributes.language_code || '' }`)
+          .then((result) => {
+            this.interestsList = lodash.map(result.data, (interest, key) => {
+              return {label: interest, code: key}
+            })
+            return localStorage.setItem(cacheName, JSON.stringify(this.interestsList))
           })
-          return localStorage.setItem('interestsList', JSON.stringify(this.interestsList))
-        })
       },
+
       submitForm () {
         this.submitButtonDisabled = true
         axios.post(`${this.apiURL}/api/subscriptions`, this.form).then(result => {
           this.serverResponse = result.data
           this.showForm = false
           this.showThankYou = true
-
         }).catch(error => {
           this.submitButtonDisabled = false
           this.serverResponseErrors = {}
-
           lodash.map(error.response.data.errors, function (item, key) {
             return this.serverResponseErrors[key] = item.join()
           }.bind(this))
@@ -326,32 +334,28 @@
         const url = new URL(window.location.href)
         return url.searchParams.get(key)
       },
-      formatPhone(value){
+
+      formatPhone () {
         if (!this.form.phone) {
           return
         }
-       this.form.phone = this.form.phone.replace(/-|\s/g,'');
-       console.log('BLUR', this.form.phone)
+        this.form.phone = this.form.phone.replace(/-|\s/g, '')
       },
     },
 
     computed: {
-
-
       currentURL () {
         return `${location.protocol}//${location.host}${location.pathname}`
       },
+
       selectFieldsReady () {
         return !(lodash.isEmpty(this.countriesList) && lodash.isEmpty(this.interestsList))
       },
+
       pageHasReferrerToken () {
         return (!!(this.getParams('token')))
       }
-    },
-    mounted () {
-      this.setData()
-      this.fetchCountries()
-      this.fetchInterests()
+
     },
 
   }
@@ -359,11 +363,23 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css">
-
+    .adra-campaign-manager-form input[type="text"] {
+        border-radius: 4px;
+    }
+    .pure-g > div {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    .l-box {
+        padding: 0.5em;
+    }
+    @media only screen and (max-width: 600px)  {
+        #tel-input {
+            width: 70%;
+        }
+    }
     div.adra-plugin form button.adra-form-submit {
-        /*min-width: 200px;*/
-        /*min-height: 50px;*/
-        /*width: 250px;*/
         width: 100%;
         text-align: center;
         display: inline-block;
@@ -375,14 +391,7 @@
         padding: 10px 10px;
         box-shadow: #00000061 1px 1px 8px;
         text-transform: uppercase;
-    }
-
-    div.adra-plugin form input {
-        width: 100%;
-        height: 54px;
-        color: #000;
-        outline: 0 !important;
-
+        text-decoration: none;
     }
 
     div.adra-plugin input[type='checkbox'] {
@@ -412,43 +421,16 @@
 
     div.adra-plugin input.vs__search,
     div.adra-plugin input.vs__search:focus {
+        cursor: pointer;
         border: 1px solid transparent !important;
+        background: transparent;
         border-left: none !important;
         width: 0 !important;
-        padding: 0 7px !important;
-        height: 44px !important;
+        /*padding: 16px 7px !important;*/
+        height: 1em !important;
         color: inherit !important;
-    }
-
-    div.adra-plugin div.flex {
-        display: flex;
-        flex-flow: row wrap;
-
-        justify-content: start;
-        align-items: start;
-    }
-
-    div.adra-plugin div.flex-item {
-        flex: 1 1 auto;
-        padding: 0.5em;
-    }
-
-    div.adra-plugin div.w-half {
-        min-width: 50%;
-    }
-
-    div.adra-plugin div.flex-fullwidth {
-        flex-basis: 100%
-    }
-
-    div.adra-plugin div.flex-quarter {
-        /*flex-basis: 25%;*/
-        flex-basis: auto;
-    }
-
-    div.adra-plugin div.flex-3-quarter {
-        flex-basis: auto;
-
+        text-decoration: none;
+        outline: none;
     }
 
     div.adra-plugin form#adra-campaign-manager input:not('vs__search') {
@@ -461,12 +443,5 @@
         text-align: left;
     }
 
-    div.adra-plugin svg.loader {
-        width: 100px;
-        height: 100px;
-        margin: 20px;
-        display: inline-block;
-    }
-
-    @import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
+    /*@import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');*/
 </style>
