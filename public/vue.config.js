@@ -1,7 +1,7 @@
 module.exports = {
   productionSourceMap: false,
   publicPath: process.env.NODE_ENV === 'production'
-  //  ? '/wp-content/plugins/adra-network-campaign-manager/dist/'
+    //  ? '/wp-content/plugins/adra-network-campaign-manager/dist/'
     ? '/wp-content/plugins/adra-network-campaign-manager/public/dist/'
 
     : 'http://localhost:2323/',
@@ -15,7 +15,7 @@ module.exports = {
       watchOptions: {
         poll: true
       },
-    //  contentBase: '/wp-content/plugins/adra-network-campaign-manager/dist/',
+      //  contentBase: '/wp-content/plugins/adra-network-campaign-manager/dist/',
       contentBase: '/wp-content/plugins/adra-network-campaign-manager/public/dist/',
 
       // allowedHosts: ['wordpress-docker.test:9911'],
@@ -28,7 +28,7 @@ module.exports = {
       jquery: 'jQuery'
     },
     output: {
-    //  filename: 'js/[name].js',
+      //  filename: 'js/[name].js',
       filename: 'js/[name]-public.js',
       chunkFilename: 'js/[name]-public.js',
     },
@@ -39,4 +39,4 @@ module.exports = {
       chunkFilename: 'css/[name]-public.css'
     }
   },
-};
+}

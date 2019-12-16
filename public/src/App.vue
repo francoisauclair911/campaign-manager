@@ -1,45 +1,53 @@
 <template>
-  <div id="app">
+    <div id="app">
 
-    <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>
-  </div>
+        <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>
+    </div>
 </template>
 <script>
   import CampaignManagerForm from './views/CampaignManagerForm'
+
   export default {
 
     name: 'App',
     components: {
       CampaignManagerForm
     },
-    mounted() {
+    mounted () {
 
     },
     computed: {
-      isLocal() {
-        const possibleLocalDomains = ['local', 'loc', 'test', 'dev'];
-        const currentDomain = window.location.origin.split('.').pop();
-        return possibleLocalDomains.includes(currentDomain);
+      isLocal () {
+        const possibleLocalDomains = ['local', 'loc', 'test', 'dev']
+        const currentDomain = window.location.origin.split('.').pop()
+        return possibleLocalDomains.includes(currentDomain)
       }
     }
   }
 </script>
 <style lang="scss">
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+    @import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.1/base-min.css');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.1/grids-responsive-min.css');
+
+    #app {
+        font-family: "Avenir", Helvetica, Arial, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-align: center;
+        color: #2c3e50;
     }
-  }
-}
+
+    #nav {
+        padding: 30px;
+
+        a {
+            font-weight: bold;
+            color: #2c3e50;
+
+            &.router-link-exact-active {
+                color: #42b983;
+            }
+        }
+    }
 </style>

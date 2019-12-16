@@ -107,7 +107,7 @@
                            name="zip_code"
                            type="text"
                            :placeholder="attributes.zip_code || placeholders.zip_code"
-                           style="min-height: 54px; !important;">
+                           style="">
                     <div class="error" v-text="serverResponseErrors.zip_code"></div>
 
                 </div>
@@ -286,31 +286,18 @@
       },
 
       getCountriesList () {
-        const cacheName = `countries-lists-${this.attributes.country_code || 'default'}`
-        if (localStorage.getItem(cacheName)) {
-          return this.countriesList = JSON.parse(localStorage.getItem(cacheName))
-        }
-
         axios.get(`${this.apiURL}/api/assets/countries/${this.attributes.country_code || '' }`)
           .then((result) => {
             this.countriesList = result.data
-            return localStorage.setItem(cacheName, JSON.stringify(result.data))
-
           })
       },
 
       getInterestsList () {
-        const cacheName = `interests-lists-${this.attributes.language_code || 'default'}`
-        if (localStorage.getItem(cacheName)) {
-          return this.interestsList = JSON.parse(localStorage.getItem(cacheName))
-        }
-
         axios.get(`${this.apiURL}/api/assets/interests/${ this.attributes.language_code || '' }`)
           .then((result) => {
             this.interestsList = lodash.map(result.data, (interest, key) => {
               return {label: interest, code: key}
             })
-            return localStorage.setItem(cacheName, JSON.stringify(this.interestsList))
           })
       },
 
@@ -409,8 +396,8 @@
 
     div.adra-plugin div.input-phone,
     div.adra-plugin div.vs__dropdown-toggle {
-        max-height: 54px !important;
-        height: 54px;
+        max-height: 42px !important;
+        height: 42px;
         background: white !important;
     }
 
@@ -443,5 +430,4 @@
         text-align: left;
     }
 
-    /*@import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');*/
 </style>

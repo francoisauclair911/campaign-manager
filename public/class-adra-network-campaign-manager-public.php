@@ -10,6 +10,7 @@
  * @subpackage Adra_Network_Campaign_Manager/public
  */
 
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -55,7 +56,6 @@ class Adra_Network_Campaign_Manager_Public
      */
     public function __construct($plugin_name, $version)
     {
-        
         $this->plugin_name = $plugin_name;
         $this->version = $version;
         $this->shortcode_name = 'campaign-manager';

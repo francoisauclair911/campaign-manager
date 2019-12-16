@@ -22,3 +22,5 @@ yarn-error.log*
 *.sw?
 
 adra-network-campaign-manager.zip
+
+node_modules/

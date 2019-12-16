@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://gitlab.com/francoisauclair911/campaign-manager-wordpress-plugin/issues"
   },
-  "homepage": "https://gitlab.com/francoisauclair911/campaign-manager-wordpress-plugin#readme"
+  "homepage": "https://gitlab.com/francoisauclair911/campaign-manager-wordpress-plugin#readme",
+  "devDependencies": {
+    "css-loader": "^3.3.2"
+  }
 }

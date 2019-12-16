@@ -56,15 +56,10 @@ class Adra_Network_Campaign_Manager_Admin
     
     function my_plugin_menu()
     {
-        if ($this->is_develop_serve()) {
-            $capacity = 'edit_pages';
-        } else {
-            $capacity = 'translate';
-        }
         add_menu_page(
             'Campaign Manager',
             'Campaign Manager',
-            $capacity,
+            'read',
             'adra-network-campaign-manager',
             [$this, 'my_plugin_options'],
             'dashicons-megaphone'

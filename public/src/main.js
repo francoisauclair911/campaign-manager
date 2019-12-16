@@ -4,10 +4,6 @@ import axios from 'axios'
 
 
 import lodash from 'lodash'
-import 'purecss/build/base-min.css'
-import 'purecss/build/grids-responsive-min.css'
-import 'vue-select/dist/vue-select.css'
-
 
 import {checkLocalStorageExpiry} from './helper'
 
