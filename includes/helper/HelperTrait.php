@@ -1,6 +1,5 @@
 <?php
 
-namespace includes\helper;
 
 trait HelperTrait {
     

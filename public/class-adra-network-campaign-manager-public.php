@@ -24,6 +24,7 @@
 class Adra_Network_Campaign_Manager_Public
 {
     
+
     /**
      * The ID of this plugin.
      *
@@ -133,11 +134,9 @@ class Adra_Network_Campaign_Manager_Public
     
     private function is_develop_serve()
     {
-        if (getenv('APPLICATION_ENV') === 'development') {
-            return true;
-        }
-        return false;
+        $currentDomain = (end(explode(".", $_SERVER['HTTP_HOST'])));
+        $possibleDomains = ['test', 'loc', 'local', 'dev'];
+        return (in_array($currentDomain, $possibleDomains));
     }
-    
     
 }

@@ -18,7 +18,6 @@ module.exports = {
       //  contentBase: '/wp-content/plugins/adra-network-campaign-manager/dist/',
       contentBase: '/wp-content/plugins/adra-network-campaign-manager/public/dist/',
 
-      // allowedHosts: ['wordpress-docker.test:9911'],
       allowedHosts: ['wp-dev.loc'],
       headers: {
         'Access-Control-Allow-Origin': '*'

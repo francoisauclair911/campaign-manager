@@ -30,39 +30,36 @@
                 </div>
             </div>
             <!--<div class="pure-g">-->
-                <!--<div class="flex-item">-->
-                    <!--<input v-model="form.first_name"-->
-                           <!--name="first_name"-->
-                           <!--type="text" :placeholder="attributes.first_name || placeholders.first_name"-->
-                           <!--required>-->
-                    <!--<div class="error" v-text="serverResponseErrors.first_name"></div>-->
+            <!--<div class="flex-item">-->
+            <!--<input v-model="form.first_name"-->
+            <!--name="first_name"-->
+            <!--type="text" :placeholder="attributes.first_name || placeholders.first_name"-->
+            <!--required>-->
+            <!--<div class="error" v-text="serverResponseErrors.first_name"></div>-->
 
 
-                <!--</div>-->
-                <!--<div class="flex-item">-->
-                    <!--<input v-model="form.last_name"-->
-                           <!--name="last_name"-->
-                           <!--type="text"-->
-                           <!--:placeholder="attributes.last_name || placeholders.last_name">-->
-                    <!--<div class="error" v-text="serverResponseErrors.last_name"></div>-->
+            <!--</div>-->
+            <!--<div class="flex-item">-->
+            <!--<input v-model="form.last_name"-->
+            <!--name="last_name"-->
+            <!--type="text"-->
+            <!--:placeholder="attributes.last_name || placeholders.last_name">-->
+            <!--<div class="error" v-text="serverResponseErrors.last_name"></div>-->
 
-                <!--</div>-->
+            <!--</div>-->
             <!--</div>-->
             <div class="pure-g">
-                <div class="pure-u-1 l-box">
+                <div class="pure-u-1 l-box"
+                     :class="{'pure-u-md-1-2' : attributes.enable_phone }">
                     <input v-model="form.email"
                            name="email"
                            type="text"
                            :placeholder="attributes.email || placeholders.email">
                     <div class="error" v-text="serverResponseErrors.email"></div>
-
-
                 </div>
 
-            </div>
 
-            <div class="pure-g" v-if="attributes.enable_phone">
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
+                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="attributes.enable_phone">
 
                     <vue-tel-input v-if="countriesList"
                                    inputId="tel-input"
@@ -78,6 +75,10 @@
                     <div class="error" v-text="serverResponseErrors.phone"></div>
 
                 </div>
+
+            </div>
+
+            <div class="pure-g">
                 <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <v-select v-model="form.communication_preference"
                               :options="communication_preference_options"
@@ -86,19 +87,6 @@
                               :placeholder="attributes.communication_preference || placeholders.communication_preference">
                     </v-select>
                     <div class="error" v-text="serverResponseErrors.communication_preference"></div>
-
-                </div>
-            </div>
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
-                    <v-select v-if="countriesList"
-                              :options="countriesList"
-                              label="name"
-                              :reduce="country => country.id"
-                              v-model="form.country_id"
-                              :placeholder="attributes.country || placeholders.country">
-                    </v-select>
-                    <div class="error" v-text="serverResponseErrors.country"></div>
 
                 </div>
                 <div class="pure-u-1 pure-u-md-1-2 l-box">
@@ -113,8 +101,19 @@
                 </div>
             </div>
             <div class="pure-g">
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
+                    <v-select v-if="countriesList"
+                              :options="countriesList"
+                              label="name"
+                              :reduce="country => country.id"
+                              v-model="form.country_id"
+                              :placeholder="attributes.country || placeholders.country">
+                    </v-select>
+                    <div class="error" v-text="serverResponseErrors.country_id"></div>
 
-                <div class="pure-u-1 l-box">
+                </div>
+
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
 
                     <v-select v-if="interestsList"
                               v-model="form.interest_id"
@@ -133,7 +132,7 @@
                             />
                         </template>
                     </v-select>
-                    <div class="error" v-text="serverResponseErrors.interest"></div>
+                    <div class="error" v-text="serverResponseErrors.interest_id"></div>
 
                 </div>
             </div>
@@ -277,7 +276,8 @@
     methods: {
       setData () {
         this.apiURL = (this.isLocal) ?
-          'https://campaign-manager.loc' :
+          // 'https://campaign-manager.loc' :
+          'https://adra-signup-api.loc' :
           'https://campaigns.adra.cloud'
         this.form.campaign_token = this.getParams('campaign_token') || this.attributes.campaign_token || null
         this.form.event_token = this.getParams('event_token') || this.attributes.event_token || null
@@ -286,14 +286,16 @@
       },
 
       getCountriesList () {
-        axios.get(`${this.apiURL}/api/assets/countries/${this.attributes.country_code || '' }`)
+        const countriesPath = (this.attributes.country_code) ? ('/' + this.attributes.country_code) : ''
+        axios.get(this.apiURL + '/api/assets/countries' + countriesPath)
           .then((result) => {
             this.countriesList = result.data
           })
       },
 
       getInterestsList () {
-        axios.get(`${this.apiURL}/api/assets/interests/${ this.attributes.language_code || '' }`)
+        const interestPath = (this.attributes.language_code) ? ('/' + this.attributes.language_code) : ''
+        axios.get(this.apiURL + '/api/assets/interests' + interestPath)
           .then((result) => {
             this.interestsList = lodash.map(result.data, (interest, key) => {
               return {label: interest, code: key}
@@ -302,13 +304,17 @@
       },
 
       submitForm () {
+        const oldButtonText = this.attributes.submit_button || this.placeholders.submit_button
+        this.attributes.submit_button = '. . .'
         this.submitButtonDisabled = true
         axios.post(`${this.apiURL}/api/subscriptions`, this.form).then(result => {
           this.serverResponse = result.data
           this.showForm = false
           this.showThankYou = true
         }).catch(error => {
+          this.attributes.submit_button = oldButtonText
           this.submitButtonDisabled = false
+
           this.serverResponseErrors = {}
           lodash.map(error.response.data.errors, function (item, key) {
             return this.serverResponseErrors[key] = item.join()
@@ -350,22 +356,37 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css">
-    .adra-campaign-manager-form input[type="text"] {
+    .adra-campaign-manager-form input[type="text"],
+    div.adra-plugin div.input-phone input[type="tel"] {
         border-radius: 4px;
+        width: 100%;
     }
+
+    .adra-campaign-manager-form input[type="text"] {
+        min-height: 42px;
+    }
+
+    div.adra-plugin div.input-phone {
+        border-color: #e3e3e3;
+    }
+
+
     .pure-g > div {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
     }
+
     .l-box {
         padding: 0.5em;
     }
-    @media only screen and (max-width: 600px)  {
+
+    @media only screen and (max-width: 600px) {
         #tel-input {
             width: 70%;
         }
     }
+
     div.adra-plugin form button.adra-form-submit {
         width: 100%;
         text-align: center;
@@ -379,6 +400,8 @@
         box-shadow: #00000061 1px 1px 8px;
         text-transform: uppercase;
         text-decoration: none;
+        outline: none;
+
     }
 
     div.adra-plugin input[type='checkbox'] {
@@ -398,7 +421,7 @@
     div.adra-plugin div.vs__dropdown-toggle {
         max-height: 42px !important;
         height: 42px;
-        background: white !important;
+        background: #fdfdfd !important;
     }
 
     div.adra-plugin div.input-phone input[type="tel"] {

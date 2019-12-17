@@ -103,7 +103,7 @@ class Adra_Network_Campaign_Manager_Admin
         }
         
         if ($this->is_develop_serve()) {
-            wp_enqueue_script($this->plugin_name . '_dev', 'https://localhost:3232/js/app-admin.js', [], $this->version, false);
+            wp_enqueue_script($this->plugin_name . '_dev', 'http://localhost:3232/js/app-admin.js', [], $this->version, false);
         } else {
             wp_enqueue_script($this->plugin_name . '_chunks', plugin_dir_url(__DIR__) . 'admin/dist/js/chunk-vendors-admin.js', [], $this->version, false);
             wp_enqueue_script($this->plugin_name, plugin_dir_url(__DIR__) . 'admin/dist/js/app-admin.js', [], $this->version, false);
@@ -114,10 +114,9 @@ class Adra_Network_Campaign_Manager_Admin
     
     public function is_develop_serve()
     {
-        if (getenv('APPLICATION_ENV') === 'development') {
-            return true;
-        }
-        return false;
+        $currentDomain = (end(explode(".", $_SERVER['HTTP_HOST'])));
+        $possibleDomains = ['test', 'loc', 'local', 'dev'];
+        return (in_array($currentDomain, $possibleDomains));
     }
     
     
