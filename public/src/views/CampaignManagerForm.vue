@@ -1,15 +1,15 @@
 <template>
     <div class="adra-plugin">
 
-        <div class="flex" v-show="!selectFieldsReady">
+        <div class="flex" v-show="!isSelectFieldsReady">
             <SpinnerLoader/>
         </div>
 
         <form class="adra-campaign-manager-form"
-              @submit.prevent="submitForm"
+              @submit.prevent="postForm"
               id="adra-campaign-manager-form"
               v-if="showForm"
-              v-show="selectFieldsReady"
+              v-show="isSelectFieldsReady"
         >
 
             <div class="pure-g">
@@ -29,25 +29,7 @@
                     <div class="error" v-text="serverResponseErrors.last_name"></div>
                 </div>
             </div>
-            <!--<div class="pure-g">-->
-            <!--<div class="flex-item">-->
-            <!--<input v-model="form.first_name"-->
-            <!--name="first_name"-->
-            <!--type="text" :placeholder="attributes.first_name || placeholders.first_name"-->
-            <!--required>-->
-            <!--<div class="error" v-text="serverResponseErrors.first_name"></div>-->
 
-
-            <!--</div>-->
-            <!--<div class="flex-item">-->
-            <!--<input v-model="form.last_name"-->
-            <!--name="last_name"-->
-            <!--type="text"-->
-            <!--:placeholder="attributes.last_name || placeholders.last_name">-->
-            <!--<div class="error" v-text="serverResponseErrors.last_name"></div>-->
-
-            <!--</div>-->
-            <!--</div>-->
             <div class="pure-g">
                 <div class="pure-u-1 l-box"
                      :class="{'pure-u-md-1-2' : attributes.enable_phone }">
@@ -58,14 +40,13 @@
                     <div class="error" v-text="serverResponseErrors.email"></div>
                 </div>
 
-
                 <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="attributes.enable_phone">
 
                     <vue-tel-input v-if="countriesList"
                                    inputId="tel-input"
                                    v-model="form.phone"
                                    class="input-phone"
-                                   @blur="formatPhone"
+                                   @blur="formatEnteredPhoneNumber"
                                    :disabledFormatting="true"
                                    name="phone"
                                    :dynamicPlaceholder="true"
@@ -170,7 +151,7 @@
                 <div class="pure-u-1 pure-u-md-1-4 l-box" style="flex: 0 1 250px; text-align: center;">
                     <button class="adra-form-submit"
                             :disabled="submitButtonDisabled"
-                            @click.prevent="submitForm">
+                            @click.prevent="postForm">
                         {{ attributes.submit_button || placeholders.submit_button }}
                     </button>
                 </div>
@@ -185,7 +166,7 @@
         <div v-if="showThankYou && serverResponse">
             <h1>{{ attributes.thank_you_heading || placeholders.thank_you_heading}}</h1>
             <h3>{{ attributes.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
-            <p>{{attributes.landing_url || currentURL }}?token={{serverResponse.token || null}}</p>
+            <p><a :href="generatedReferralLink">{{ generatedReferralLink }}</a></p>
 
         </div>
     </div>
@@ -212,6 +193,11 @@
     },
     data () {
       return {
+        states: {
+          countriesList: 'empty',
+          interestsList: 'empty',
+          formRequest: 'idle'
+        },
         apiURL: '',
         showForm: true,
         showThankYou: false,
@@ -268,16 +254,18 @@
       this.attributes = this.$root.$data.shortcodeAttributes
     },
     mounted () {
+      console.log('mounted!')
+      console.log(this.getParams('lol'))
       this.setData()
-      this.getCountriesList()
-      this.getInterestsList()
+      this.fetchCountriesList()
+      this.fetchInterestsList()
+
     },
 
     methods: {
       setData () {
         this.apiURL = (this.isLocal) ?
-          // 'https://campaign-manager.loc' :
-          'https://adra-signup-api.loc' :
+          'http://adra-signup-api.loc' :
           'https://campaigns.adra.cloud'
         this.form.campaign_token = this.getParams('campaign_token') || this.attributes.campaign_token || null
         this.form.event_token = this.getParams('event_token') || this.attributes.event_token || null
@@ -285,70 +273,118 @@
         this.form.ref_token = this.getParams('token')
       },
 
-      getCountriesList () {
+      fetchCountriesList () {
         const countriesPath = (this.attributes.country_code) ? ('/' + this.attributes.country_code) : ''
+        const stateName = 'countriesList'
+        this.setState(stateName, 'fetching')
         axios.get(this.apiURL + '/api/assets/countries' + countriesPath)
           .then((result) => {
             this.countriesList = result.data
-          })
+            this.setState(stateName, 'fetched')
+          }).catch((e) => this.setState(stateName, 'failed'))
       },
 
-      getInterestsList () {
+      fetchInterestsList () {
         const interestPath = (this.attributes.language_code) ? ('/' + this.attributes.language_code) : ''
+        const stateName = 'interestsList'
+        this.setState(stateName, 'fetching')
         axios.get(this.apiURL + '/api/assets/interests' + interestPath)
           .then((result) => {
             this.interestsList = lodash.map(result.data, (interest, key) => {
               return {label: interest, code: key}
             })
-          })
+            this.setState(stateName, 'fetched')
+          }).catch((e) => this.setState(stateName, 'failed'))
       },
 
-      submitForm () {
-        const oldButtonText = this.attributes.submit_button || this.placeholders.submit_button
+      postForm () {
+        const stateName = 'formRequest'
+        const previousSubmitButtonText = this.attributes.submit_button || this.placeholders.submit_button
         this.attributes.submit_button = '. . .'
         this.submitButtonDisabled = true
-        axios.post(`${this.apiURL}/api/subscriptions`, this.form).then(result => {
-          this.serverResponse = result.data
-          this.showForm = false
-          this.showThankYou = true
-        }).catch(error => {
-          this.attributes.submit_button = oldButtonText
+
+        this.setState(stateName, 'requesting')
+
+        axios.post(`${this.apiURL}/api/subscriptions`, this.form)
+          .then(result => {
+            this.serverResponse = result.data
+            this.showForm = false
+            this.showThankYou = true
+            this.setState(stateName, 'success')
+
+          }).catch(error => {
+          this.attributes.submit_button = previousSubmitButtonText
           this.submitButtonDisabled = false
-
-          this.serverResponseErrors = {}
-          lodash.map(error.response.data.errors, function (item, key) {
-            return this.serverResponseErrors[key] = item.join()
-          }.bind(this))
-
+          if (error.response) {
+            this.setState(stateName, 'failed-' + error.response.status)
+            console.log(error.response.status)
+            this.serverResponseErrors = {}
+            lodash.map(error.response.data.errors, function (item, key) {
+              return this.serverResponseErrors[key] = item.join()
+            }.bind(this))
+          }
         })
       },
-
       getParams (key) {
-        const url = new URL(window.location.href)
-        return url.searchParams.get(key)
+        return this.fullCurrentURL.searchParams.get(key)
       },
 
-      formatPhone () {
+      hasParams (key) {
+        return this.fullCurrentURL.searchParams.has(key)
+      },
+
+      formatEnteredPhoneNumber () {
         if (!this.form.phone) {
           return
         }
         this.form.phone = this.form.phone.replace(/-|\s/g, '')
       },
+
+      setState (state, value) {
+        return this.states[state] = value
+      }
     },
 
     computed: {
-      currentURL () {
+      strippedCurrentURL () {
+        // stripped from query parameters
         return `${location.protocol}//${location.host}${location.pathname}`
       },
 
-      selectFieldsReady () {
-        return !(lodash.isEmpty(this.countriesList) && lodash.isEmpty(this.interestsList))
+      fullCurrentURL () {
+        return new URL(window.location.href)
       },
 
-      pageHasReferrerToken () {
-        return (!!(this.getParams('token')))
-      }
+      isSelectFieldsReady () {
+        return (this.states.countriesList === 'fetched' && this.states.interestsList === 'fetched')
+      },
 
+      isReferrerTokenParamPresent () {
+        return (!!(this.getParams('token')))
+      },
+
+      generatedReferralLink () {
+        let finalURLParameters = []
+        if (this.serverResponse && this.serverResponse.token) {
+          finalURLParameters.push({name: 'token', value: this.serverResponse.token})
+        }
+        if (this.hasParams('organization_token')) {
+          finalURLParameters.push({name: 'organization_token', value: this.getParams('organization_token')})
+        }
+        if (this.hasParams('campaign_token')) {
+          finalURLParameters.push({name: 'campaign_token', value: this.getParams('campaign_token')})
+        }
+        if (this.hasParams('event_token')) {
+          finalURLParameters.push({name: 'event_token', value: this.getParams('event_token')})
+          console.log('we have it')
+        }
+        const formattedParameters = lodash.chain(finalURLParameters).map(p => {
+          return p.name + '=' + p.value
+        }).join('&')
+          .value()
+
+        return (this.attributes.landing_url || this.strippedCurrentURL) + '?' + formattedParameters
+      }
     },
 
   }
