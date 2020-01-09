@@ -133,10 +133,10 @@
             type: 'checkbox',
             value: ''
           },
-          // communication_preference: {
-          //   type: 'select',
-          //   value: ''
-          // },
+          communication_preference: {
+            type: 'select',
+            value: ''
+          },
 
           submit_button: {
             label: 'Submit Button Text',
