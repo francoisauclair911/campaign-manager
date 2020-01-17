@@ -1,17 +1,21 @@
 <template>
     <div id="app">
 
-        <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>
+<!--        <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>-->
+        <campaign-manager-form-v2 :isLocal="isLocal"></campaign-manager-form-v2>
     </div>
 </template>
 <script>
   import CampaignManagerForm from './views/CampaignManagerForm'
+  import CampaignManagerFormV2 from './views/CampaignManagerFormV2'
 
   export default {
 
     name: 'App',
     components: {
-      CampaignManagerForm
+      CampaignManagerForm,
+      CampaignManagerFormV2
+
     },
     mounted () {
 
