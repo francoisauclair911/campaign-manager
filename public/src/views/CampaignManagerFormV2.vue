@@ -27,10 +27,30 @@
                            :placeholder="translatedPlaceholders.last_name || placeholders.last_name">
                     <div class="error" v-text="serverResponseErrors.last_name"></div>
                 </div>
-<!--            </div>-->
-<!--            <div class="pure-g">-->
+
+                <div class="pure-u-1 pure-u-md-1-2 l-box p">
+                    <v-select v-if="countriesList"
+                              :options="countriesList"
+                              label="name"
+                              :reduce="country => country.id"
+                              v-model="form.country_id"
+                              :placeholder="translatedPlaceholders.country || placeholders.country">
+                    </v-select>
+                    <div class="error" v-text="serverResponseErrors.country_id"></div>
+
+                </div>
+                <div class="pure-u-1 pure-u-md-1-2 l-box">
+                    <input v-model="form.zip_code"
+                           name="zip_code"
+                           type="text"
+                           :placeholder="translatedPlaceholders.zip_code || placeholders.zip_code"
+                           style="">
+                    <div class="error" v-text="serverResponseErrors.zip_code"></div>
+
+                </div>
+
                 <div class="pure-u-1 l-box"
-                     :class="{'pure-u-md-1-2' : enablePhoneInput }">
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : '' ">
                     <input v-model="form.email"
                            name="email"
                            type="text"
@@ -55,9 +75,7 @@
 
                 </div>
 
-<!--            </div>-->
-<!--            <div class="pure-g">-->
-                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="enablePhoneInput">
+                <div class="pure-u-1 pure-u-md-2-5 l-box" v-if="enablePhoneInput">
                     <v-select v-model="form.communication_preference"
 
                               :options="communicationPreferenceOptions"
@@ -68,35 +86,10 @@
                     <div class="error" v-text="serverResponseErrors.communication_preference"></div>
 
                 </div>
-                <div class="pure-u-1 l-box"
-                     :class="enablePhoneInput ? 'pure-u-md-1-2' : 'pure-u-md-2-5' ">
-                <input v-model="form.zip_code"
-                           name="zip_code"
-                           type="text"
-                           :placeholder="translatedPlaceholders.zip_code || placeholders.zip_code"
-                           style="">
-                    <div class="error" v-text="serverResponseErrors.zip_code"></div>
 
-                </div>
-<!--            </div>-->
-<!--            <div class="pure-g">-->
-                <div class="pure-u-1 l-box"
-                     :class="enablePhoneInput ? 'pure-u-md-1-2' : 'pure-u-md-3-5' ">
-                <!--                     :class="{'pure-u-md-1-2' : enablePhoneInput }">-->
-                    <v-select v-if="countriesList"
-                              :options="countriesList"
-                              label="name"
-                              :reduce="country => country.id"
-                              v-model="form.country_id"
-                              :placeholder="translatedPlaceholders.country || placeholders.country">
-                    </v-select>
-                    <div class="error" v-text="serverResponseErrors.country_id"></div>
-
-                </div>
 
                 <div class="pure-u-1 l-box"
-                     :class="enablePhoneInput ? 'pure-u-md-1-2' : '' ">
-<!--                     :class="{'pure-u-md-1-2' : enablePhoneInput }">-->
+                     :class="enablePhoneInput ? 'pure-u-md-3-5' : '' ">
                 <v-select v-if="interestsList"
                               v-model="form.interest_id"
                               :options="interestsList"
@@ -117,8 +110,6 @@
                     <div class="error" v-text="serverResponseErrors.interest_id"></div>
 
                 </div>
-<!--            </div>-->
-<!--            <div class="pure-g" style="text-align: left">-->
                 <div class="pure-u-1 l-box" style="text-align: left">
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
@@ -131,9 +122,6 @@
                     </span>
                 </div>
 
-
-<!--            </div>-->
-<!--            <div class="pure-g" style="text-align: left">-->
                 <div class="pure-u-1 l-box" style="text-align: left">
 
                     <input type="checkbox"
