@@ -11,7 +11,7 @@
               v-if="isSelectFieldsReady && showForm"
         >
 
-            <div class="pure-g">
+            <div class="pure-g" style="text-align: start">
                 <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <input v-model="form.first_name"
                            name="first_name"
@@ -27,9 +27,8 @@
                            :placeholder="translatedPlaceholders.last_name || placeholders.last_name">
                     <div class="error" v-text="serverResponseErrors.last_name"></div>
                 </div>
-            </div>
-
-            <div class="pure-g">
+<!--            </div>-->
+<!--            <div class="pure-g">-->
                 <div class="pure-u-1 l-box"
                      :class="{'pure-u-md-1-2' : enablePhoneInput }">
                     <input v-model="form.email"
@@ -56,10 +55,9 @@
 
                 </div>
 
-            </div>
-
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="enableCommunicationPreference">
+<!--            </div>-->
+<!--            <div class="pure-g">-->
+                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="enablePhoneInput">
                     <v-select v-model="form.communication_preference"
 
                               :options="communicationPreferenceOptions"
@@ -71,9 +69,8 @@
 
                 </div>
                 <div class="pure-u-1 l-box"
-                     :class="{'pure-u-md-1-2' : enableCommunicationPreference }">
-
-                    <input v-model="form.zip_code"
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : 'pure-u-md-2-5' ">
+                <input v-model="form.zip_code"
                            name="zip_code"
                            type="text"
                            :placeholder="translatedPlaceholders.zip_code || placeholders.zip_code"
@@ -81,9 +78,11 @@
                     <div class="error" v-text="serverResponseErrors.zip_code"></div>
 
                 </div>
-            </div>
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
+<!--            </div>-->
+<!--            <div class="pure-g">-->
+                <div class="pure-u-1 l-box"
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : 'pure-u-md-3-5' ">
+                <!--                     :class="{'pure-u-md-1-2' : enablePhoneInput }">-->
                     <v-select v-if="countriesList"
                               :options="countriesList"
                               label="name"
@@ -95,9 +94,10 @@
 
                 </div>
 
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
-
-                    <v-select v-if="interestsList"
+                <div class="pure-u-1 l-box"
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : '' ">
+<!--                     :class="{'pure-u-md-1-2' : enablePhoneInput }">-->
+                <v-select v-if="interestsList"
                               v-model="form.interest_id"
                               :options="interestsList"
                               name="interest"
@@ -117,9 +117,9 @@
                     <div class="error" v-text="serverResponseErrors.interest_id"></div>
 
                 </div>
-            </div>
-            <div class="pure-g" style="text-align: left">
-                <div class="pure-u-1 l-box">
+<!--            </div>-->
+<!--            <div class="pure-g" style="text-align: left">-->
+                <div class="pure-u-1 l-box" style="text-align: left">
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
                            v-model.numeric="form.age_consent"
@@ -132,9 +132,9 @@
                 </div>
 
 
-            </div>
-            <div class="pure-g" style="text-align: left">
-                <div class="pure-u-1 l-box">
+<!--            </div>-->
+<!--            <div class="pure-g" style="text-align: left">-->
+                <div class="pure-u-1 l-box" style="text-align: left">
 
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
@@ -234,26 +234,27 @@
     },
     mounted () {
       console.log('mounted!');
-      console.log(this.getParams('lol'));
-
+      this.setApiURL();
       this.fetchForm();
 
     },
 
     methods: {
       fetchForm() {
-        this.apiURL = (this.isLocal) ?
-          'https://adra-signup-api.loc' :
-          'https://campaigns.adra.cloud'
+        const formToken = this.getParams('form_token') || this.attributes.form_token;
 
-
-        axios.get(this.apiURL + '/api/forms/' +  this.attributes.form_token)
+        axios.get(this.apiURL + '/api/forms/' +  formToken )
           .then((result) => {
             this.serverForm = result.data
             this.setData();
           }).catch((e) => console.log(e));
       },
 
+      setApiURL() {
+        this.apiURL = (this.isLocal) ?
+          'https://adra-signup-api.loc' :
+          'https://campaigns.adra.cloud'
+      },
       setData () {
 
         this.translatedPlaceholders =  this.serverForm.translated_fields;
@@ -323,17 +324,16 @@
       communicationPreferenceOptions() {
         return [
           {
-            text: this.translatedPlaceholders.communication_preference_option_email,
+            text: this.translatedPlaceholders.communication_preference_option_email ||
+              this.placeholders.communication_preference_option_email,
             value: 'email'
           },
           {
-            text: this.translatedPlaceholders.communication_preference_option_phone,
+            text: this.translatedPlaceholders.communication_preference_option_phone ||
+              this.placeholders.communication_preference_option_phone,
             value: 'phone'
           }
         ]
-      },
-      enableCommunicationPreference() {
-        return this.translatedPlaceholders.is_enabled_communication_preference
       },
       enablePhoneInput() {
         return this.translatedPlaceholders.is_enabled_phone;
@@ -410,7 +410,7 @@
 
     @media only screen and (max-width: 600px) {
         #tel-input {
-            width: 70%;
+            /*width: 70%;*/
         }
     }
 
@@ -454,6 +454,8 @@
     div.adra-plugin div.input-phone input[type="tel"] {
         height: auto !important;
         border: none;
+        width: 0;
+        flex: auto;
     }
 
     div.adra-plugin input.vs__search,

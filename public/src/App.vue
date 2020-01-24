@@ -1,8 +1,8 @@
 <template>
     <div id="app">
 
-<!--        <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>-->
-        <campaign-manager-form-v2 :isLocal="isLocal"></campaign-manager-form-v2>
+        <campaign-manager-form v-if="!isFormTokenPresent" :isLocal="isLocal"></campaign-manager-form>
+        <campaign-manager-form-v2 v-if="isFormTokenPresent" :isLocal="isLocal"></campaign-manager-form-v2>
     </div>
 </template>
 <script>
@@ -18,9 +18,13 @@
 
     },
     mounted () {
-
+      const att = this.$root.$data.shortcodeAttributes
+    console.log(att.form_token)
     },
     computed: {
+      isFormTokenPresent() {
+        return this.$root.$data.shortcodeAttributes.form_token !== undefined
+      },
       isLocal () {
         const possibleLocalDomains = ['local', 'loc', 'test', 'dev']
         const currentDomain = window.location.origin.split('.').pop()

@@ -40,7 +40,7 @@
                     <div class="error" v-text="serverResponseErrors.email"></div>
                 </div>
 
-                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="attributes.enable_phone">
+                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="isPhoneEnabled">
 
                     <vue-tel-input v-if="countriesList"
                                    inputId="tel-input"
@@ -60,7 +60,7 @@
             </div>
 
             <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
+                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="isPhoneEnabled">
                     <v-select v-model="form.communication_preference"
                               :options="communication_preference_options"
                               :reduce="option => option.value"
@@ -70,8 +70,8 @@
                     <div class="error" v-text="serverResponseErrors.communication_preference"></div>
 
                 </div>
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
-
+                <div class="pure-u-1 l-box"
+                    :class="{'pure-u-md-1-2' : isPhoneEnabled }">
                     <input v-model="form.zip_code"
                            name="zip_code"
                            type="text"
@@ -346,6 +346,10 @@
     },
 
     computed: {
+      isPhoneEnabled() {
+        const enablePhone = this.attributes.enable_phone;
+        return !(enablePhone === undefined || enablePhone === false);
+      },
       strippedCurrentURL () {
         // stripped from query parameters
         return `${location.protocol}//${location.host}${location.pathname}`
@@ -463,6 +467,8 @@
     div.adra-plugin div.input-phone input[type="tel"] {
         height: auto !important;
         border: none;
+        width: 0;
+        flex: auto;
     }
 
     div.adra-plugin input.vs__search,
