@@ -1,22 +1,30 @@
 <template>
     <div id="app">
 
-        <campaign-manager-form :isLocal="isLocal"></campaign-manager-form>
+        <campaign-manager-form v-if="!isFormTokenPresent" :isLocal="isLocal"></campaign-manager-form>
+        <campaign-manager-form-v2 v-if="isFormTokenPresent" :isLocal="isLocal"></campaign-manager-form-v2>
     </div>
 </template>
 <script>
   import CampaignManagerForm from './views/CampaignManagerForm'
+  import CampaignManagerFormV2 from './views/CampaignManagerFormV2'
 
   export default {
 
     name: 'App',
     components: {
-      CampaignManagerForm
-    },
-    mounted () {
+      CampaignManagerForm,
+      CampaignManagerFormV2
 
     },
+    mounted () {
+      const att = this.$root.$data.shortcodeAttributes
+    console.log(att.form_token)
+    },
     computed: {
+      isFormTokenPresent() {
+        return this.$root.$data.shortcodeAttributes.form_token !== undefined
+      },
       isLocal () {
         const possibleLocalDomains = ['local', 'loc', 'test', 'dev']
         const currentDomain = window.location.origin.split('.').pop()

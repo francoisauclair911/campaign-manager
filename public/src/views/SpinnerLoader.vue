@@ -1,6 +1,6 @@
 <template>
-    <div class="flex-item">
-        <svg class="loader" version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    <div class="pure-u-1 l-box">
+    <svg width="120" height="120" class="loader" version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
   viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
   <circle fill="#000" stroke="none" cx="6" cy="50" r="6">
     <animate
@@ -34,3 +34,8 @@
     name: 'SpinnerLoader'
   }
 </script>
+<style scoped>
+    svg.loader {
+        margin: 0 auto;
+    }
+</style>

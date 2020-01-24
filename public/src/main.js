@@ -16,7 +16,6 @@ window.lodash = lodash.noConflict();
 Vue.config.productionTip = false;
 
 Vue.config.devtools =  (process.env.NODE_ENV === 'development')
-// Vue.config.devtools =  true;
 
 document.addEventListener('DOMContentLoaded', () => {
   const shortcodeData = document.querySelector('#app');

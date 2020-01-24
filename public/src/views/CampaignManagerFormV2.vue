@@ -1,22 +1,21 @@
 <template>
     <div class="adra-plugin">
 
-        <div class="flex" v-show="!isSelectFieldsReady">
+        <div class="pure-g" v-show="!isSelectFieldsReady">
             <SpinnerLoader/>
         </div>
 
         <form class="adra-campaign-manager-form"
               @submit.prevent="postForm"
               id="adra-campaign-manager-form"
-              v-if="showForm"
-              v-show="isSelectFieldsReady"
+              v-if="isSelectFieldsReady && showForm"
         >
 
-            <div class="pure-g">
+            <div class="pure-g" style="text-align: start">
                 <div class="pure-u-1 pure-u-md-1-2 l-box">
                     <input v-model="form.first_name"
                            name="first_name"
-                           type="text" :placeholder="attributes.first_name || placeholders.first_name"
+                           type="text" :placeholder="translatedPlaceholders.first_name || placeholders.first_name"
                            required>
                     <div class="error" v-text="serverResponseErrors.first_name"></div>
 
@@ -25,22 +24,21 @@
                     <input v-model="form.last_name"
                            name="last_name"
                            type="text"
-                           :placeholder="attributes.last_name || placeholders.last_name">
+                           :placeholder="translatedPlaceholders.last_name || placeholders.last_name">
                     <div class="error" v-text="serverResponseErrors.last_name"></div>
                 </div>
-            </div>
-
-            <div class="pure-g">
+<!--            </div>-->
+<!--            <div class="pure-g">-->
                 <div class="pure-u-1 l-box"
-                     :class="{'pure-u-md-1-2' : attributes.enable_phone }">
+                     :class="{'pure-u-md-1-2' : enablePhoneInput }">
                     <input v-model="form.email"
                            name="email"
                            type="text"
-                           :placeholder="attributes.email || placeholders.email">
+                           :placeholder="translatedPlaceholders.email || placeholders.email">
                     <div class="error" v-text="serverResponseErrors.email"></div>
                 </div>
 
-                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="isPhoneEnabled">
+                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="enablePhoneInput">
 
                     <vue-tel-input v-if="countriesList"
                                    inputId="tel-input"
@@ -57,52 +55,55 @@
 
                 </div>
 
-            </div>
-
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="isPhoneEnabled">
+<!--            </div>-->
+<!--            <div class="pure-g">-->
+                <div class="pure-u-1 pure-u-md-1-2 l-box" v-if="enablePhoneInput">
                     <v-select v-model="form.communication_preference"
-                              :options="communication_preference_options"
+
+                              :options="communicationPreferenceOptions"
                               :reduce="option => option.value"
                               label="text"
-                              :placeholder="attributes.communication_preference || placeholders.communication_preference">
+                              :placeholder="translatedPlaceholders.communication_preference || placeholders.communication_preference">
                     </v-select>
                     <div class="error" v-text="serverResponseErrors.communication_preference"></div>
 
                 </div>
                 <div class="pure-u-1 l-box"
-                    :class="{'pure-u-md-1-2' : isPhoneEnabled }">
-                    <input v-model="form.zip_code"
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : 'pure-u-md-2-5' ">
+                <input v-model="form.zip_code"
                            name="zip_code"
                            type="text"
-                           :placeholder="attributes.zip_code || placeholders.zip_code"
+                           :placeholder="translatedPlaceholders.zip_code || placeholders.zip_code"
                            style="">
                     <div class="error" v-text="serverResponseErrors.zip_code"></div>
 
                 </div>
-            </div>
-            <div class="pure-g">
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
+<!--            </div>-->
+<!--            <div class="pure-g">-->
+                <div class="pure-u-1 l-box"
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : 'pure-u-md-3-5' ">
+                <!--                     :class="{'pure-u-md-1-2' : enablePhoneInput }">-->
                     <v-select v-if="countriesList"
                               :options="countriesList"
                               label="name"
                               :reduce="country => country.id"
                               v-model="form.country_id"
-                              :placeholder="attributes.country || placeholders.country">
+                              :placeholder="translatedPlaceholders.country || placeholders.country">
                     </v-select>
                     <div class="error" v-text="serverResponseErrors.country_id"></div>
 
                 </div>
 
-                <div class="pure-u-1 pure-u-md-1-2 l-box">
-
-                    <v-select v-if="interestsList"
+                <div class="pure-u-1 l-box"
+                     :class="enablePhoneInput ? 'pure-u-md-1-2' : '' ">
+<!--                     :class="{'pure-u-md-1-2' : enablePhoneInput }">-->
+                <v-select v-if="interestsList"
                               v-model="form.interest_id"
                               :options="interestsList"
                               name="interest"
                               label="label"
                               :reduce="interest => parseInt(interest.code)"
-                              :placeholder="attributes.interest || placeholders.interest"
+                              :placeholder="translatedPlaceholders.interest || placeholders.interest"
                     >
                         <template #search="{attributes, events}">
                             <input
@@ -116,9 +117,9 @@
                     <div class="error" v-text="serverResponseErrors.interest_id"></div>
 
                 </div>
-            </div>
-            <div class="pure-g" style="text-align: left">
-                <div class="pure-u-1 l-box">
+<!--            </div>-->
+<!--            <div class="pure-g" style="text-align: left">-->
+                <div class="pure-u-1 l-box" style="text-align: left">
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
                            v-model.numeric="form.age_consent"
@@ -126,14 +127,14 @@
                            :false-value="0">
 
                     <span :class="{ error: serverResponseErrors.age_consent }">
-                         {{ attributes.age_consent || placeholders.age_consent}}
+                         {{ translatedPlaceholders.age_consent || placeholders.age_consent}}
                     </span>
                 </div>
 
 
-            </div>
-            <div class="pure-g" style="text-align: left">
-                <div class="pure-u-1 l-box">
+<!--            </div>-->
+<!--            <div class="pure-g" style="text-align: left">-->
+                <div class="pure-u-1 l-box" style="text-align: left">
 
                     <input type="checkbox"
                            style="vertical-align: text-bottom;"
@@ -141,7 +142,7 @@
                            :true-value="1"
                            :false-value="0">
 
-                    <span>{{ attributes.communication_consent || placeholders.communication_consent}}</span>
+                    <span>{{ translatedPlaceholders.communication_consent || placeholders.communication_consent}}</span>
                     <div class="error" v-text="serverResponseErrors.communication_consent"></div>
 
                 </div>
@@ -152,7 +153,7 @@
                     <button class="adra-form-submit"
                             :disabled="submitButtonDisabled"
                             @click.prevent="postForm">
-                        {{ attributes.submit_button || placeholders.submit_button }}
+                        {{ translatedPlaceholders.submit_button || placeholders.submit_button }}
                     </button>
                 </div>
 
@@ -164,8 +165,8 @@
             </div>
         </form>
         <div v-if="showThankYou && serverResponse">
-            <h1>{{ attributes.thank_you_heading || placeholders.thank_you_heading}}</h1>
-            <h3>{{ attributes.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
+            <h1>{{ translatedPlaceholders.thank_you_heading || placeholders.thank_you_heading}}</h1>
+            <h3>{{ translatedPlaceholders.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
             <p><a :href="generatedReferralLink">{{ generatedReferralLink }}</a></p>
 
         </div>
@@ -179,7 +180,7 @@
 
   export default {
 
-    name: 'CampaignManagerForm',
+    name: 'CampaignManagerFormV2',
     components: {
       SpinnerLoader,
       vSelect,
@@ -204,31 +205,9 @@
         attributes: null,
         countriesList: null,
         interestsList: null,
-        communication_preference_options: [
-          {
-            text: 'Email',
-            value: 'email'
-          },
-          {
-            text: 'Phone',
-            value: 'phone'
-          }
-        ],
-        placeholders: {
-          first_name: 'First Name',
-          last_name: 'Last Name',
-          email: 'Email',
-          communication_preference: 'Communication Preference',
-          country: 'Choose a Country',
-          zip_code: 'Zip Code',
-          age_consent: 'By signing this form I confirm I am over 13 years old.',
-          communication_consent: 'I agree to receive communications from ADRA. ',
-          interest: 'How would you describe your interest ?',
-          country_code: null,
-          submit_button: 'Submit',
-          thank_you_heading: 'Thank you for your support!',
-          thank_you_subheading: 'Make sure to save your advocate link below'
-        },
+        serverForm: null,
+        translatedPlaceholders: null,
+        placeholders:null,
         form: {
           first_name: null,
           last_name: null,
@@ -254,47 +233,43 @@
       this.attributes = this.$root.$data.shortcodeAttributes
     },
     mounted () {
-      console.log('mounted!')
-      console.log(this.getParams('lol'))
-      this.setData()
-      this.fetchCountriesList()
-      this.fetchInterestsList()
+      console.log('mounted!');
+      this.setApiURL();
+      this.fetchForm();
 
     },
 
     methods: {
-      setData () {
+      fetchForm() {
+        const formToken = this.getParams('form_token') || this.attributes.form_token;
+
+        axios.get(this.apiURL + '/api/forms/' +  formToken )
+          .then((result) => {
+            this.serverForm = result.data
+            this.setData();
+          }).catch((e) => console.log(e));
+      },
+
+      setApiURL() {
         this.apiURL = (this.isLocal) ?
-          'http://adra-signup-api.loc' :
+          'https://adra-signup-api.loc' :
           'https://campaigns.adra.cloud'
-        this.form.campaign_token = this.getParams('campaign_token') || this.attributes.campaign_token || null
-        this.form.event_token = this.getParams('event_token') || this.attributes.event_token || null
-        this.form.organization_token = this.getParams('organization_token') || this.attributes.organization_token || null
-        this.form.ref_token = this.getParams('token')
       },
+      setData () {
 
-      fetchCountriesList () {
-        const countriesPath = (this.attributes.country_code) ? ('/' + this.attributes.country_code) : ''
-        const stateName = 'countriesList'
-        this.setState(stateName, 'fetching')
-        axios.get(this.apiURL + '/api/assets/countries' + countriesPath)
-          .then((result) => {
-            this.countriesList = result.data
-            this.setState(stateName, 'fetched')
-          }).catch((e) => this.setState(stateName, 'failed'))
-      },
+        this.translatedPlaceholders =  this.serverForm.translated_fields;
+        this.form.campaign_token = this.getParams('campaign_token') || this.serverForm.tokens.campaign_token || null;
+        this.form.event_token = this.getParams('event_token') || this.serverForm.tokens.event_token || null;
+        this.form.organization_token = this.getParams('organization_token') || this.serverForm.tokens.organization_token || null;
+        this.form.ref_token = this.getParams('token');
+        this.placeholders = this.serverForm.default_fields;
+        this.countriesList = this.serverForm.countriesList;
+        this.setState('countriesList', 'fetched')
+        this.interestsList = lodash.map(this.serverForm.interestsList, (interest, key) => {
+          return {label: interest, code: key}
+        })
+        this.setState('interestsList', 'fetched')
 
-      fetchInterestsList () {
-        const interestPath = (this.attributes.language_code) ? ('/' + this.attributes.language_code) : ''
-        const stateName = 'interestsList'
-        this.setState(stateName, 'fetching')
-        axios.get(this.apiURL + '/api/assets/interests' + interestPath)
-          .then((result) => {
-            this.interestsList = lodash.map(result.data, (interest, key) => {
-              return {label: interest, code: key}
-            })
-            this.setState(stateName, 'fetched')
-          }).catch((e) => this.setState(stateName, 'failed'))
       },
 
       postForm () {
@@ -346,9 +321,22 @@
     },
 
     computed: {
-      isPhoneEnabled() {
-        const enablePhone = this.attributes.enable_phone;
-        return !(enablePhone === undefined || enablePhone === false);
+      communicationPreferenceOptions() {
+        return [
+          {
+            text: this.translatedPlaceholders.communication_preference_option_email ||
+              this.placeholders.communication_preference_option_email,
+            value: 'email'
+          },
+          {
+            text: this.translatedPlaceholders.communication_preference_option_phone ||
+              this.placeholders.communication_preference_option_phone,
+            value: 'phone'
+          }
+        ]
+      },
+      enablePhoneInput() {
+        return this.translatedPlaceholders.is_enabled_phone;
       },
       strippedCurrentURL () {
         // stripped from query parameters
@@ -380,14 +368,13 @@
         }
         if (this.hasParams('event_token')) {
           finalURLParameters.push({name: 'event_token', value: this.getParams('event_token')})
-          console.log('we have it')
         }
         const formattedParameters = lodash.chain(finalURLParameters).map(p => {
           return p.name + '=' + p.value
         }).join('&')
           .value()
 
-        return (this.attributes.landing_url || this.strippedCurrentURL) + '?' + formattedParameters
+        return (this.translatedPlaceholders.landing_url || this.strippedCurrentURL) + '?' + formattedParameters
       }
     },
 
@@ -423,7 +410,7 @@
 
     @media only screen and (max-width: 600px) {
         #tel-input {
-            width: 70%;
+            /*width: 70%;*/
         }
     }
 
