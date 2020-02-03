@@ -16,7 +16,7 @@
  * Plugin Name:       ADRA Campaign Manager Plugin
  * Plugin URI:        https://adra.org/
  * Description:       Campaign Manager, Displays and Generates Form for ADRA Campaigns
- * Version:           1.1.4
+ * Version:           2.0.0
  * Author:            Francois Auclair
  * Author URI:        https://profile.mtldigital.ca/
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'ADRA_NETWORK_CAMPAIGN_MANAGER_VERSION', '1.1.4' );
+define( 'ADRA_NETWORK_CAMPAIGN_MANAGER_VERSION', '2.0.0' );
 
 /**
  * The code that runs during plugin activation.

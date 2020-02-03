@@ -19,7 +19,6 @@
     },
     mounted () {
       const att = this.$root.$data.shortcodeAttributes
-    console.log(att.form_token)
     },
     computed: {
       isFormTokenPresent() {
