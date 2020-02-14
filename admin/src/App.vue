@@ -15,9 +15,9 @@
                 <div class="tw-w-full tw-mb-4">
                     <label for="org_token" class="tw-block tw-mb-2">Enter your organization token</label>
 
-                    <input type="text" @input="formsList = []" class="input tw-mr-2 tw-w-full md:tw-w-1/2" name="org_token" id="org_token" v-model="organization_token">
+                    <input type="text" @input="formsList = []" class="tw-py-2 tw-pl-2 tw-mr-2 tw-w-full md:tw-w-1/2" name="org_token" id="org_token" v-model="organization_token">
 
-                    <button @click="fetchForms" class="button">List all forms</button>
+                    <button @click="fetchForms" class="tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded focus:tw-outline-none focus:tw-shadow-outline">List all forms</button>
 
                 </div>
 
@@ -55,7 +55,7 @@
                  :class="{'tw-bg-green-200' : selectedForm}">
                 <div class="tw-flex tw-flex-wrap tw-justify-center tw-w-full" v-if="selectedForm">
                     <code class="tw-w-full tw-mb-4 ">{{generatedShortCode}}</code>
-                    <button class="button" @click="copyShortcode">{{ isCopied ? 'Copied' : 'Copy' }}</button>
+                    <button class="tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded focus:tw-outline-none focus:tw-shadow-outline" @click="copyShortcode">{{ isCopied ? 'Copied' : 'Copy' }}</button>
                 </div>
 
             </div>
@@ -66,8 +66,6 @@
 </template>
 <script>
   import vSelect from 'vue-select'
-  import 'vue-select/dist/vue-select.css'
-
   import SpinnerLoader from '../../public/src/views/SpinnerLoader'
 
   export default {
@@ -151,6 +149,8 @@
 </script>
 
 <style>
+    @import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
+
     /*.v-select {*/
     /*    width: 100%;*/
     /*}*/
