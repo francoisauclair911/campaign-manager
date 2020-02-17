@@ -151,11 +151,12 @@
                 <div class="error" v-text="serverResponseErrors.event_token"></div>
             </div>
         </form>
+
         <div v-if="showThankYou && serverResponse">
             <h1>{{ attributes.thank_you_heading || placeholders.thank_you_heading}}</h1>
             <h3>{{ attributes.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
             <p><a :href="generatedReferralLink">{{ generatedReferralLink }}</a></p>
-
+            <adra-social-sharer :generated-referral-link="generatedReferralLink"/>
         </div>
     </div>
 </template>
@@ -164,11 +165,13 @@
   import vSelect from 'vue-select'
   import { VueTelInput } from 'vue-tel-input'
   import SpinnerLoader from './SpinnerLoader'
+  import AdraSocialSharer from './AdraSocialSharer'
 
   export default {
 
     name: 'CampaignManagerForm',
     components: {
+      AdraSocialSharer,
       SpinnerLoader,
       vSelect,
       VueTelInput

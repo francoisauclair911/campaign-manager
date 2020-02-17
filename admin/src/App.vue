@@ -3,364 +3,169 @@
     <div class="tw-mt-4 tw-w-full tw-flex tw-flex-wrap md:-tw-mx-5">
         <div class="tw-w-full">
             <h2 class="tw-mb-4  tw-font-thing tw-text-2xl md:tw-px-5">
-               1-  Translate all the required fields
+                First Step
             </h2>
         </div>
 
         <div class="tw-w-full md:tw-px-5">
-            <form @change="formChanged" @submit.prevent="submitForm"
-                  class="tw-flex tw-flex-wrap tw-bg-white tw-shadow-md tw-rounded sm:tw-px-0 md:tw-px-8 tw-pt-6 tw-pb-8 tw-mb-4 -tw-mx-5">
-                <div class="tw-flex tw-flex-wrap sm:tw-w-full md:tw-w-1/2 tw-px-5 tw-mb-4"
-                     v-for="(input, key, index) in form" :key="index">
-                    <label class="tw-full tw-adra-label tw-uppercase" :for="key">
-                        {{ input.label || toSentence(key) + ' Field' }}
-                    </label>
-                    <div class="tw-w-full tw-mb-2" v-if="index === 11">
-                        <a href="https://countrycode.org/"
-                           target="_blank"
-                           class="tw-underline">Link to find your country code (look for the 3 digit ISO )</a>
-                    </div>
-                    <div class="sm:tw-w-full tw-w-full tw-mb-2 ">
-                        <span class="tw-font-bold"> English : </span><span class="tw-font-thin">{{ placeholders[key] || ''}}</span>
 
-                    </div>
-                    <div class="tw-w-full tw-mb-2">
-                        <div class="tw-block tw-font-bold"> Your language :
-                            <span class="tw-font-thin">{{ form[key]['value'] || ''}}</span></div>
+            <div class="tw-flex tw-flex-wrap tw-bg-white tw-shadow-md tw-rounded sm:tw-px-0 md:tw-px-8 tw-pt-6 tw-pb-8 tw-mb-4 -tw-mx-5">
 
-                    </div>
 
-                    <input class=" tw-adra-input" :id="key" :name="key" v-model="form[key]['value']"
-                           type="text"
-                           :placeholder="input.placeholder || 'Enter your translation here'"
-                           :required="form[key]['required']">
+                <div class="tw-w-full tw-mb-4">
+                    <label for="org_token" class="tw-block tw-mb-2">Enter your organization token</label>
+
+                    <input type="text" @input="formsList = []" class="tw-py-2 tw-pl-2 tw-mr-2 tw-w-full md:tw-w-1/2" name="org_token" id="org_token" v-model="organization_token">
+
+                    <button @click="fetchForms" class="tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded focus:tw-outline-none focus:tw-shadow-outline">List all forms</button>
+
                 </div>
-                <div class="tw-w-full tw-mb-2 tw-text-center tw-justify-center">
-                    <button class="button">Generate shortcode</button>
+
+
+             <div class="tw-border-r">
+                 <SpinnerLoader v-if="state.fetchForm === 'fetching'"/>
+                 <p v-if="state.fetchForm === 'failed'" class="tw-text-red-900">
+                     Error fetching, verify your organization token
+                 </p>
+             </div>
+
+
+
+                <div class="tw-w-full md:tw-w-1/2">
+                    <v-select v-if="isFormListReady"
+                              class="tw-w-full"
+                              v-model="selectedForm"
+                              placeholder="Choose your form"
+                              :options="formsListsFormatted"
+                              :reduce="(form) => form.value"></v-select>
                 </div>
-            </form>
+            </div>
         </div>
 
 
         <div class="tw-mt-4 tw-w-full md:tw-px-5">
 
             <h2 class="tw-mb-2  tw-font-thing tw-text-2xl">
-                2 - Use this shortcode when you have entered all the required text translations
+                Second Step
             </h2>
             <p class="tw-text-xl tw-mb-2">
                 Copy the code below in the page you are translating
             </p>
             <div class=" tw-flex tw-flex-wrap tw-justify-center tw-bg-white tw-shadow-md tw-rounded tw-px-8 tw-pt-6 tw-pb-8 tw-mb-4 -tw-mx-5 tw-text-center"
-                 :class="{'tw-bg-green-200' : submittedForm}">
-                <div class="tw-flex tw-flex-wrap tw-justify-center tw-w-full" v-if="submittedForm">
-                    <code  class="tw-w-full tw-mb-4 ">{{generatedShortCode}}</code>
-                    <button class="button" @click="copyShortcode">{{ isCopied ? 'Copied' : 'Copy' }}</button>
+                 :class="{'tw-bg-green-200' : selectedForm}">
+                <div class="tw-flex tw-flex-wrap tw-justify-center tw-w-full" v-if="selectedForm">
+                    <code class="tw-w-full tw-mb-4 ">{{generatedShortCode}}</code>
+                    <button class="tw-bg-blue-500 hover:tw-bg-blue-700 tw-text-white tw-font-bold tw-py-2 tw-px-4 tw-rounded focus:tw-outline-none focus:tw-shadow-outline" @click="copyShortcode">{{ isCopied ? 'Copied' : 'Copy' }}</button>
                 </div>
 
             </div>
         </div>
 
 
-        <div class="tw-mt-4 tw-w-full tw-px-5">
-            <h2 class="tw-mb-2 tw-font-thing tw-text-2xl">
-                Optional : Already have a shortcode ? Want to modify it ? Paste it below
-            </h2>
-            <p class="tw-mb-2 tw-text-center tw-text-xl">
-                The fields will be populate with your shortcode info, you can then edit them and use the new generated
-                shortcode above.
-            </p>
-            <div class="tw-flex tw-flex-wrap tw-bg-white tw-shadow-md tw-rounded tw-px-8 tw-pt-6 tw-pb-8 tw-mb-4 -tw-mx-5">
-                <textarea class="tw-w-full"
-                          name="existing_shortcode"
-                          id="existing_shortcode"
-                          v-model="existing_shortcode"
-                          cols="30"></textarea>
-            </div>
-        </div>
-
     </div>
 </template>
 <script>
+  import vSelect from 'vue-select'
+  import SpinnerLoader from '../../public/src/views/SpinnerLoader'
+
   export default {
     name: 'AdminPanel',
+    components: {
+      vSelect,
+      SpinnerLoader
+    },
     data () {
+
       return {
+        state: {
+          fetchForm: 'idle'
+        },
         isCopied: false,
         existing_shortcode: null,
         submittedForm: false,
-        placeholders: {
-          first_name: 'First Name',
-          last_name: 'Last Name',
-          email: 'Email',
-          communication_preference: 'Communication Preference',
-          country: 'Choose a Country',
-          zip_code: 'Zip Code',
-          country_code: 'USA',
-          age_consent: 'By signing this form I confirm I am over 13 years old.',
-          communication_consent: 'I agree to receive communications from ADRA. ',
-          interest: 'How would you describe your interest ?',
-          submit_button: 'Submit',
-          thank_you_heading: 'Thank you for your support!',
-          thank_you_subheading: 'Make sure to save your advocate link below'
-        },
+        organization_token: null,
+        selectedForm: null,
+        formsList: [],
         form: {
-          first_name: {
-            value: '',
-          },
-          last_name: {
-            value: ''
-          },
-          email: {
-            value: ''
-          },
-          country: {
-            type: 'select',
-            value: ''
-          },
-          zip_code: {
-            value: ''
-          },
-          interest: {
-            label: 'Interest Select Fields',
-            type: 'select',
-            value: ''
-          },
-          age_consent: {
-            type: 'checkbox',
-            value: null
-          },
-          communication_consent: {
-            type: 'checkbox',
-            value: ''
-          },
-          communication_preference: {
-            type: 'select',
-            value: ''
-          },
-
-          submit_button: {
-            label: 'Submit Button Text',
-            value: ''
-          },
-          thank_you_heading: {
-            label: 'Title for the "Thank You" banner after successfull registration',
-            value: ''
-          },
-          thank_you_subheading: {
-            label: 'Subtitle for the subheading after successfull registration',
-            value: ''
-          },
-          country_code: {
-            label: 'Your country code (3 letters), this allows your country to be on top of the select list',
-            value: ''
-          },
-          language_code: {
-            label: 'Your language code (2 letters), this allows your to fetch the translate name of the interests list',
-            value: ''
-          },
-          landing_url: {
-            label: 'The URL where the form (shortcode) is present, will be used to generate the new user referral link',
-            value: '',
-            required: true
-
-          },
-          campaign_token: {
-            label: 'Campaign Token',
-            placeholder: 'Enter your campaign token here',
+          form_token: {
+            label: 'Form Token',
+            placeholder: 'Enter your form token here',
             type: 'hidden',
             value: '',
             required: true
-          },
-          organization_token: {
-            label: 'Organization Token',
-            placeholder: 'Enter your organization token here',
-            type: 'hidden',
-            value: '',
-            required: true
-
-          },
-          event_token: {
-            label: 'Event Token (if any)',
-            placeholder: 'Enter your event token here',
-            type: 'hidden',
-            value: ''
           },
         },
       }
     },
     methods: {
-      copyShortcode() {
+      fetchForms () {
+        this.state.fetchForm = 'fetching'
+        fetch(this.apiURL + '/api/organizations/' + this.organization_token + '/forms')
+          .then(result => {
+            return result.json()
+          }).then(data => {
+          this.formsList = data.forms
+          this.state.fetchForm = 'fetched'
+
+        }).catch((err) => {
+          this.state.fetchForm = 'failed'
+        })
+      },
+      copyShortcode () {
         navigator.clipboard.writeText(this.generatedShortCode)
-        this.isCopied = true;
+        this.isCopied = true
       },
-      formChanged (e) {
-        this.isCopied = false;
-        localStorage.formChanged = true
-        localStorage[e.target.name] = e.target.value
-      },
-      submitForm () {
-        this.submittedForm = true
-      },
-      toSentence (string) {
-        return lodash.startCase(string)
-      },
-      parseShortCode (shortCode) {
-        let re = /(\s+|\W)|(\w+)/g
-        let match
-        let token
-        let curAttribute = ''
-        let quoteChar
-        let mode = 'NOT STARTED'
-        let parsedValue = {
-          name: '',
-          attributes: {},
-          content: ''
-        }
-        let hasContent = (shortCode.match(/\]/g) || []).length
-        if (hasContent > 2) {
-          throw ('invalid shortCode: match more then 2 tokens "]". Use only shortcode with this function. Example "[name]teste[/name]" or "[name prop=value]"')
-        } else if (hasContent === 1) {
-          hasContent = false
-        } else {
-          hasContent = true
-        }
-
-        while ((match = re.exec(shortCode)) != null) {
-          token = match[0]
-          if (mode === 'COMPLETE') {
-            break
-          }
-
-          switch (mode) {
-            case 'NOT STARTED':
-              if (token == '[') {
-                mode = 'GETNAME'
-              }
-              break
-            case 'GETNAME':
-              if (!(/\s/.test(token))) {
-                if (!(/\]/.test(token))) {
-                  parsedValue.name += token
-                } else {
-                  mode = 'GETCONTENT'
-                }
-              } else if (parsedValue.name) {
-                mode = 'PARSING'
-              }
-              break
-            case 'GETCONTENT':
-              if (!(/\[/.test(token))) {
-                parsedValue.content += token
-              } else if (parsedValue.name) {
-                mode = 'COMPLETE'
-              }
-              break
-            case 'PARSING':
-              // if non text char throw it
-              if (token == ']') {
-                if (hasContent === 1) {
-                  mode = 'COMPLETE'
-                } else {
-                  mode = 'GETCONTENT'
-                }
-              } else if (token == '=') {
-                if (!curAttribute) throw ('invalid token: "' + token + '" encountered at ' + match.index)
-                else mode = 'GET ATTRIBUTE VALUE'
-              } else if (!/\s/.test(token)) {
-                curAttribute += token
-              } else if (curAttribute) {
-                mode = 'SET ATTRIBUTE'
-              }
-              break
-            case 'SET ATTRIBUTE':
-              // these are always from match[1]
-              if (/\s/.test(token)) { parsedValue.attributes[curAttribute] = null }
-              else if (token == '=') { mode = 'GET ATTRIBUTE VALUE' }
-              else { throw ('invalid token: "' + token + '" encountered at ' + match.index) }
-              break
-            case 'GET ATTRIBUTE VALUE':
-              if (!(/\s/.test(token))) {
-                if (/["']/.test(token)) {
-                  quoteChar = token
-                  parsedValue.attributes[curAttribute] = ''
-                  mode = 'GET QUOTED ATTRIBUTE VALUE'
-                } else {
-                  parsedValue.attributes[curAttribute] = token
-                  curAttribute = ''
-                  mode = 'PARSING'
-                }
-              }
-              break
-            case 'GET QUOTED ATTRIBUTE VALUE':
-              if (/\\/.test(token)) { mode = 'ESCAPE VALUE' }
-              else if (token == quoteChar) {
-                mode = 'PARSING'
-                curAttribute = ''
-              }
-              else { parsedValue.attributes[curAttribute] += token }
-              break
-            case 'ESCAPE VALUE':
-              if (/\\'"/.test(token)) { parsedValue.attributes[curAttribute] += token }
-              else { parsedValue.attributes[curAttribute] += '\\' + token }
-              mode = 'GET QUOTED ATTRIBUTE VALUE'
-              break
-
-          }
-        }
-        if (curAttribute && !parsedValue.attributes[curAttribute]) {
-          parsedValue.attributes[curAttribute] = ''
-        }
-
-        return parsedValue
-      }
     },
-    mounted () {
-
-      if (localStorage.formChanged) {
-        lodash.map(this.form, (item, key) => {
-          this.form[key]['value'] = localStorage[key]
-        })
-      }
-
-    },
-    watch: {
-      // form: {
-      //   handler: function (newValue) {
-      //     localStorage.form = true
-      //     lodash.map(newValue, (item, key) => {
-      //       localStorage[key] = item.value
-      //     })
-      //   },
-      //   deep: true
-      // },
-
-      existing_shortcode: function () {
-        this.submittedForm = false;
-
-        const data = this.parseShortCode(this.existing_shortcode)
-        lodash.map(this.form, (item, key) => {
-          return item.value = data.attributes[key]
-        })
-      }
-    },
-
     computed: {
-      generatedShortCode() {
-        return `[campaign-manager ${this.shortcodeParameters}]`;
+      isLocal () {
+        const possibleLocalDomains = ['local', 'loc', 'test', 'dev']
+        const currentDomain = window.location.origin.split('.').pop()
+        return possibleLocalDomains.includes(currentDomain)
       },
-      shortcodeParameters () {
-        const param = lodash.map(this.form, (item, key) => {
-          if (item.value) {
-            return `${key}="${item.value}"`
+      apiURL() {
+        if ((this.isLocal)) {
+          return 'https://adra-signup-api.loc';
+        }
+        return 'https://campaigns.adra.cloud';
+      },
+      formsListsFormatted () {
+        return lodash.map(this.formsList, (token, name) => {
+          return {
+            label: name,
+            value: token
           }
         })
-        return param.join(' ')
-      }
+      },
+      isFormListReady () {
+        return !lodash.isEmpty(this.formsList)
+      },
+      generatedShortCode () {
+        return `[campaign-manager form_token="${this.selectedForm}"]`
+      },
+
     },
 
   }
 </script>
 
-<style lang="scss">
+<style>
+    @import url('https://unpkg.com/vue-select@3.0.0/dist/vue-select.css');
 
+    /*.v-select {*/
+    /*    width: 100%;*/
+    /*}*/
+
+    input.vs__search,
+    input.vs__search:focus {
+        cursor: pointer;
+        border: 1px solid transparent !important;
+        background: transparent;
+        border-left: none !important;
+        width: 0 !important;
+        /*padding: 16px 7px !important;*/
+        height: 1em !important;
+        color: inherit !important;
+        text-decoration: none;
+        outline: none;
+    }
 </style>
