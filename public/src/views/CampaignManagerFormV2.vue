@@ -90,7 +90,7 @@
 
                 <div class="pure-u-1 l-box"
                      :class="enablePhoneInput ? 'pure-u-md-3-5' : '' ">
-                <v-select v-if="interestsList"
+                    <v-select v-if="interestsList"
                               v-model="form.interest_id"
                               :options="interestsList"
                               name="interest"
@@ -152,11 +152,13 @@
                 <div class="error" v-text="serverResponseErrors.event_token"></div>
             </div>
         </form>
-        <div v-if="showThankYou && serverResponse">
-            <h1>{{ translatedPlaceholders.thank_you_heading || placeholders.thank_you_heading}}</h1>
-            <h3>{{ translatedPlaceholders.thank_you_subheading || placeholders.thank_you_subheading}}</h3>
-            <p><a :href="generatedReferralLink">{{ generatedReferralLink }}</a></p>
 
+
+        <div v-if="showThankYou && serverResponse">
+        <h2>{{ translatedPlaceholders.thank_you_heading || placeholders.thank_you_heading}}</h2>
+        <h4>{{ translatedPlaceholders.thank_you_subheading || placeholders.thank_you_subheading}}</h4>
+        <p><a :href="generatedReferralLink">{{ generatedReferralLink }}</a></p>
+            <AdraSocialSharer :generated-referral-link="generatedReferralLink"/>
         </div>
     </div>
 </template>
@@ -165,15 +167,16 @@
   import vSelect from 'vue-select'
   import { VueTelInput } from 'vue-tel-input'
   import SpinnerLoader from './SpinnerLoader'
+  import AdraSocialSharer from './AdraSocialSharer'
 
   export default {
 
     name: 'CampaignManagerFormV2',
     components: {
+      AdraSocialSharer,
       SpinnerLoader,
       vSelect,
-      VueTelInput
-    },
+      VueTelInput},
     props: {
       isLocal: {
         type: Boolean,
@@ -195,7 +198,7 @@
         interestsList: null,
         serverForm: null,
         translatedPlaceholders: null,
-        placeholders:null,
+        placeholders: null,
         form: {
           first_name: null,
           last_name: null,
@@ -221,37 +224,37 @@
       this.attributes = this.$root.$data.shortcodeAttributes
     },
     mounted () {
-      console.log('mounted!');
-      this.setApiURL();
-      this.fetchForm();
+      console.log('mounted!')
+      this.setApiURL()
+      this.fetchForm()
 
     },
 
     methods: {
-      fetchForm() {
-        const formToken = this.getParams('form_token') || this.attributes.form_token;
+      fetchForm () {
+        const formToken = this.getParams('form_token') || this.attributes.form_token
 
-        axios.get(this.apiURL + '/api/forms/' +  formToken )
+        axios.get(this.apiURL + '/api/forms/' + formToken)
           .then((result) => {
             this.serverForm = result.data
-            this.setData();
-          }).catch((e) => console.log(e));
+            this.setData()
+          }).catch((e) => console.log(e))
       },
 
-      setApiURL() {
+      setApiURL () {
         this.apiURL = (this.isLocal) ?
           'https://adra-signup-api.loc' :
           'https://campaigns.adra.cloud'
       },
       setData () {
 
-        this.translatedPlaceholders =  this.serverForm.translated_fields;
-        this.form.campaign_token = this.getParams('campaign_token') || this.serverForm.tokens.campaign_token || null;
-        this.form.event_token = this.getParams('event_token') || this.serverForm.tokens.event_token || null;
-        this.form.organization_token = this.getParams('organization_token') || this.serverForm.tokens.organization_token || null;
-        this.form.ref_token = this.getParams('token');
-        this.placeholders = this.serverForm.default_fields;
-        this.countriesList = this.serverForm.countriesList;
+        this.translatedPlaceholders = this.serverForm.translated_fields
+        this.form.campaign_token = this.getParams('campaign_token') || this.serverForm.tokens.campaign_token || null
+        this.form.event_token = this.getParams('event_token') || this.serverForm.tokens.event_token || null
+        this.form.organization_token = this.getParams('organization_token') || this.serverForm.tokens.organization_token || null
+        this.form.ref_token = this.getParams('token')
+        this.placeholders = this.serverForm.default_fields
+        this.countriesList = this.serverForm.countriesList
         this.setState('countriesList', 'fetched')
         this.interestsList = lodash.map(this.serverForm.interestsList, (interest, key) => {
           return {label: interest, code: key}
@@ -309,22 +312,22 @@
     },
 
     computed: {
-      communicationPreferenceOptions() {
+      communicationPreferenceOptions () {
         return [
           {
             text: this.translatedPlaceholders.communication_preference_option_email ||
-              this.placeholders.communication_preference_option_email,
+            this.placeholders.communication_preference_option_email,
             value: 'email'
           },
           {
             text: this.translatedPlaceholders.communication_preference_option_phone ||
-              this.placeholders.communication_preference_option_phone,
+            this.placeholders.communication_preference_option_phone,
             value: 'phone'
           }
         ]
       },
-      enablePhoneInput() {
-        return this.translatedPlaceholders.is_enabled_phone;
+      enablePhoneInput () {
+        return this.translatedPlaceholders.is_enabled_phone
       },
       strippedCurrentURL () {
         // stripped from query parameters
@@ -384,7 +387,6 @@
     div.adra-plugin div.input-phone {
         border-color: #e3e3e3;
     }
-
 
     .pure-g > div {
         -webkit-box-sizing: border-box;
