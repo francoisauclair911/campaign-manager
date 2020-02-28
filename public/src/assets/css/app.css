@@ -1,0 +1,130 @@
+@import 'tailwind.css';
+
+*:focus {
+    outline: 0;
+    outline: none;
+}
+.input {
+    @apply w-full h-12 mt-6 px-3 rounded ;
+}
+
+.custom-select {
+    @apply w-full h-auto mt-6  px-0 rounded ;
+}
+.custom-select input.vs__search,
+.custom-select input.vs__search:focus{
+    @apply bg-white border-0 cursor-pointer h-8 mt-2 !important;
+}
+.custom-select span.vs__selected + input {
+    @apply hidden;
+}
+.custom-select.interests-select .vs__selected {
+    @apply text-left text-sm !important;
+}
+.custom-select ul.vs__dropdown-menu {
+    /*overflow: auto;*/
+}
+.custom-select ul.vs__dropdown-menu li.vs__dropdown-option{
+    white-space: normal;
+    /*word-break: normal;*/
+    /*overflow: auto;*/
+    /*text-overflow: ellipsis;*/
+}
+.custom-select .vs__selected-options {
+    /*@apply overflow-hidden;*/
+}
+.custom-select div.vs__dropdown-toggle,
+.input-phone
+{
+    @apply h-12 mt-6 bg-white rounded;
+}
+
+.input-phone input[type="tel"]{
+    @apply h-auto border-0 w-0 flex-1 rounded overflow-hidden !important;
+}
+
+.btn {
+    @apply font-bold py-3 px-10 rounded uppercase text-xl;
+}
+.btn-primary {
+    @apply bg-adra border-none text-white;
+}
+.btn-primary:hover {
+    @apply bg-adra border-none opacity-75 text-white;
+}
+.btn-primary:focus {
+    @apply bg-adra border-none opacity-75 text-white;
+}
+.btn-primary-invert {
+    @apply bg-white text-adra;
+}
+
+input[type='checkbox'] {
+    @apply w-4 h-4 bg-white rounded border-2 mr-4;
+}
+
+input::placeholder {
+    @apply text-gray-600 !important;
+}
+
+.error {
+    @apply text-red-700 text-xs text-left italic;
+}
+.error-checkbox {
+    @apply error not-italic text-base;
+}
+.error-input,
+.error-select div.vs__dropdown-toggle,
+.error-input-phone.vue-tel-input {
+    @apply border border-red-600;
+}
+
+/* CHECKBOX TOGGLE SWITCH */
+.form-switch  {
+    @apply relative select-none w-12 mr-2 leading-normal;
+}
+.form-switch-checkbox {
+    @apply hidden;
+}
+.form-switch-label {
+    @apply block overflow-hidden cursor-pointer bg-white border-0 rounded h-6 shadow-inner;
+
+    transition: background-color 0.2s ease-in;
+}
+.form-switch-label:before {
+    @apply absolute block bg-white inset-y-0 w-6 h-6 border-2 border-adra rounded -ml-1;
+    right: 50%;
+    content: "";
+    transition: all 0.2s ease-in;
+}
+.form-switch-checkbox:checked + .form-switch-label,
+.form-switch-checkbox:checked + .form-switch-label:before {
+
+}
+.form-switch-checkbox:checked + .form-switch-label {
+    @apply bg-adra shadow-none;
+}
+.form-switch-checkbox:checked + .form-switch-label:before {
+    /*@apply pin-r;*/
+    @apply right-0;
+}
+
+
+
+@keyframes spinner {
+    to {transform: rotate(360deg);}
+}
+.spinner {
+    @apply block relative w-full h-auto;
+}
+.spinner:before {
+    @apply absolute w-5 h-5 -mt-2 -ml-2 rounded-full border-2 border-t-2 border-gray-600;
+    content: '';
+    box-sizing: border-box;
+    border-top-color: #000;
+    animation: spinner .6s linear infinite;
+}
+
+/*.referrer-link {*/
+/*    @apply flex-1 outline-none text-center text-lg font-light italic cursor-pointer py-2 px-10  border border-solid border-adra rounded-r-none rounded-l-none border-l-0 border-r-0 !important;*/
+/*}*/

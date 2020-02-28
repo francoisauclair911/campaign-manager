@@ -11,7 +11,7 @@ checkLocalStorageExpiry();
 
 window.axios = axios
 window.lodash = lodash.noConflict();
-
+import './assets/css/app.css'
 
 Vue.config.productionTip = false;
 

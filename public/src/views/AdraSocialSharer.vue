@@ -1,4 +1,5 @@
 <template>
+
     <social-sharing :url="generatedReferralLink" hashtags="EveryChildEverywhere" inline-template>
         <div>
             <div class="pure-g" style="margin-top: 1em; display:flex; justify-content: space-evenly">
@@ -28,10 +29,7 @@
                 </div>
                 <div class="" style="display:flex; justify-content: center">
                     <network network="email">
-                        <svg fill="#fff" role="img" width="24" height="24" viewBox="0 0 24 24"
-                             xmlns="http://www.w3.org/2000/svg"><title>Gmail icon</title>
-                            <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.649 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.076 3 1.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"/>
-                        </svg>
+                        <svg fill="#fff" width="24" height="24" xmlns="http://www.w3.org/2000/svg"><path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.649 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068A1.485 1.485 0 011.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"/></svg>
                     </network>
                 </div>
             </div>
@@ -39,56 +37,14 @@
     </social-sharing>
 </template>
 <script>
+    import SocialSharing from 'vue-social-sharing'
   export default {
     name: 'AdraSocialSharer',
     props: {
       generatedReferralLink: {}
+    },
+    components: {
+      SocialSharing
     }
   }
 </script>
-<style lang="css">
-    .adra-campaign-manager-form input[type="text"],
-    div.adra-plugin div.input-phone input[type="tel"] {
-        border-radius: 4px;
-        width: 100%;
-    }
-
-    .adra-campaign-manager-form input[type="text"] {
-        min-height: 42px;
-    }
-
-    .pure-g > div {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-
-    @media only screen and (max-width: 600px) {
-    }
-
-    div.adra-plugin input[type='checkbox'] {
-        width: 16px;
-        height: 16px;
-        background: white;
-        border-radius: 3px;
-        border: 2px solid #555;
-        margin-right: 0.5em;
-    }
-
-    div.adra-plugin input::placeholder {
-        color: #8a8a8a !important;
-    }
-
-    div.adra-plugin div.input-phone input[type="tel"] {
-        height: auto !important;
-        border: none;
-        width: 0;
-        flex: auto;
-    }
-
-    div.adra-plugin form#adra-campaign-manager input:not('vs__search') {
-        border: 1px #B4B4B4 solid !important;
-        height: 55px !important;
-    }
-
-</style>
