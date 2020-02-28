@@ -118,7 +118,7 @@
                         <!--                            <div class="error" v-text="serverResponseErrors.interest_id"></div>-->
 
                         <!--                        </div>-->
-                        <div class="w-full px-2 text-left mt-6 mb-3 flex">
+                        <div class="w-full px-2 text-left mt-6 mb-3 flex items-center">
                             <div class="form-switch inline-block align-middle ">
                                 <!--                            <input type="checkbox" name="1" id="1" class="form-switch-checkbox" />-->
                                 <input type="checkbox"
@@ -137,7 +137,7 @@
                             </label>
                         </div>
 
-                        <div class="w-full px-2 text-left flex">
+                        <div class="w-full px-2 text-left flex items-center">
                             <div class="form-switch inline-block align-middle">
                                 <!--                            <input type="checkbox" name="1" id="1" class="form-switch-checkbox" />-->
                                 <input type="checkbox"
@@ -194,7 +194,7 @@
                          class="flex flex-col justify-center items-center w-full  rounded mt-6 p-4 ">
 
                     <p
-                            class="text-white text-center font-display my-4 text-3xl sm:text-5xl  leading-negative whitespace-no-wrap sm:whitespace-normal"
+                            class="text-white text-center font-display my-4 text-3xl sm:text-5xl  leading-negative whitespace-normal"
                     >
                         {{ translatedPlaceholders.thank_you_heading || placeholders.thank_you_heading}}
 
@@ -206,42 +206,38 @@
                     </p>
 
                     <div class="w-full flex flex-wrap justify-center">
-                        <div class="w-full flex flex-wrap items-center justify-center">
-                            <button
-                                    @click.prevent="copyReferrerURL"
-                                    class="hidden sm:inline-block hover:bg-adra focus:bg-adra focus:outline-none outline-none leading-none btn-disabled hover:shadow-none focus:shadow-none btn-primary bg-primary-30% rounded rounded-tr-none rounded-br-none border-2 border-adra font-light italic  px-2 py-1 border-r-0 "
-                            >
-                                <svg
+                                <button type="text"
+                                        class="w-full overflow-hidden md:w-3/4 inline-block hover:bg-adra focus:bg-adra hover:text-white
+                                        focus:outline-none leading-7 outline-none text-center text-lg font-light italic cursor-pointer py-2 px-2
+                                        border border-solid border-adra rounded-r md:rounded-r-none  rounded-l
+                                        border-l-1
+                                        border-r-1 hover:bg-adra hover:text-white"
+                                        @click.prevent="copyReferrerURL">
+                                    <span class="text-xl text-black">{{generatedReferralLink}}</span>
+                                </button>
+
+                               <button @click.prevent="copyReferrerURL"
+                                       class="mt-4 md:mt-0 focus:bg-adra focus:outline-none  outline-none
+                                       leading-none btn-disabled hover:shadow-none focus:shadow-none
+                                       text-white btn-primary bg-primary-30% rounded md:rounded-l-none border-2 border-adra
+                                       font-light italic  px-2 py-1 border-l-0"
+                               >
+                                   <svg v-if="!states.isReferralLinkCopied"
                                         xmlns="http://www.w3.org/2000/svg"
                                         class="fill-current text-white pl-2 pt-2 w-10 h-10"
                                         viewBox="0 0 40 40">
-                                    <path d="M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z"/>
-                                </svg>
-                            </button>
-                            <button type="text"
-                                    class="hover:bg-adra focus:bg-adra hover:text-white focus:outline-none outline-none text-center text-lg font-light italic cursor-pointer py-2 px-2 sm:px-10  border border-solid border-adra rounded-r-none  rounded-l sm:rounded-l-none border-l-1 sm:border-l-0 border-r-0 hover:bg-adra hover:text-white"
-                                    @click.prevent="copyReferrerURL">
-                                <span class="text-xl text-black">{{generatedReferralLink}}</span>
-                            </button>
+                                       <path d="M4 2a2 2 0 00-2 2v14h2V4h14V2H4zm4 4a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2H8zm0 2h12v12H8V8z"/>
+                                   </svg>
 
-                            <button @click.prevent="copyReferrerURL"
-                                    class="hover:bg-adra focus:bg-adra focus:outline-none  outline-none leading-none btn-disabled hover:shadow-none focus:shadow-none text-white btn-primary bg-primary-30% rounded rounded-l-none border-2 border-adra font-light italic  px-2 py-1 border-l-0"
-                            >
-                                <svg v-if="!states.isReferralLinkCopied"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     class="fill-current text-white pl-2 pt-2 w-10 h-10"
-                                     viewBox="0 0 40 40">
-                                    <path d="M4 2a2 2 0 00-2 2v14h2V4h14V2H4zm4 4a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2H8zm0 2h12v12H8V8z"/>
-                                </svg>
+                                   <svg v-if="states.isReferralLinkCopied"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="fill-current text-white pl-2 pt-2 w-10 h-10"
+                                        viewBox="0 0 40 40">
+                                       <path d="M20.285 2L9 13.567 3.714 8.556 0 12.272 9 21 24 5.715z"/>
+                                   </svg>
+                               </button>
 
-                                <svg v-if="states.isReferralLinkCopied"
-                                     xmlns="http://www.w3.org/2000/svg"
-                                     class="fill-current text-white pl-2 pt-2 w-10 h-10"
-                                     viewBox="0 0 40 40">
-                                    <path d="M20.285 2L9 13.567 3.714 8.556 0 12.272 9 21 24 5.715z"/>
-                                </svg>
-                            </button>
-
+                        </div>
                             <div class="w-full">
                                 <social-sharing :url="generatedReferralLink" hashtags="EveryChildEverywhere"
                                                 inline-template>
@@ -274,8 +270,7 @@
                                 </social-sharing>
                             </div>
 
-                        </div>
-                    </div>
+<!--                        </div>-->
                 </section>
             </transition>
 
@@ -315,6 +310,7 @@
         apiURL: '',
         showForm: true,
         showThankYou: false,
+        // showThankYou: true,
         attributes: null,
         countriesList: null,
         interestsList: null,
@@ -338,6 +334,7 @@
           event_token: null,
         },
         serverResponse: null,
+        // serverResponse: true,
         serverResponseErrors: {},
         submitButtonDisabled: false,
         noDashMapInterest: null,
@@ -535,6 +532,7 @@
   }
 </script>
 <style>
+    /* purgecss start ignore */
     .v-select {
         position: relative;
         font-family: inherit
@@ -843,4 +841,5 @@
     .vs--loading .vs__spinner {
         opacity: 1
     }
+    /* purgecss end ignore */
 </style>

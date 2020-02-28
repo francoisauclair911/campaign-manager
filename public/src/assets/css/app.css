@@ -1,11 +1,11 @@
 @import 'tailwind.css';
-
+/* purgecss start ignore */
 *:focus {
     outline: 0;
     outline: none;
 }
 .input {
-    @apply w-full h-12 mt-6 px-3 rounded ;
+    @apply w-full h-12 mt-6 px-3 rounded border border-gray-500 !important;
 }
 
 .custom-select {
@@ -13,7 +13,7 @@
 }
 .custom-select input.vs__search,
 .custom-select input.vs__search:focus{
-    @apply bg-white border-0 cursor-pointer h-8 mt-2 !important;
+    @apply bg-white border-0 cursor-pointer h-8 mt-2 py-0 px-3 !important;
 }
 .custom-select span.vs__selected + input {
     @apply hidden;
@@ -26,9 +26,6 @@
 }
 .custom-select ul.vs__dropdown-menu li.vs__dropdown-option{
     white-space: normal;
-    /*word-break: normal;*/
-    /*overflow: auto;*/
-    /*text-overflow: ellipsis;*/
 }
 .custom-select .vs__selected-options {
     /*@apply overflow-hidden;*/
@@ -36,7 +33,7 @@
 .custom-select div.vs__dropdown-toggle,
 .input-phone
 {
-    @apply h-12 mt-6 bg-white rounded;
+    @apply h-12 mt-6 bg-white rounded border border-gray-500 !important;
 }
 
 .input-phone input[type="tel"]{
@@ -125,6 +122,4 @@ input::placeholder {
     animation: spinner .6s linear infinite;
 }
 
-/*.referrer-link {*/
-/*    @apply flex-1 outline-none text-center text-lg font-light italic cursor-pointer py-2 px-10  border border-solid border-adra rounded-r-none rounded-l-none border-l-0 border-r-0 !important;*/
-/*}*/
+/* purgecss end ignore */
