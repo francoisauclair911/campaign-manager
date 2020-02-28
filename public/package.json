@@ -13,6 +13,7 @@
     "lodash": "^4.17.15",
     "purecss": "^1.0.1",
     "qs": "^6.8.0",
+    "tailwindcss": "^1.2.0",
     "vue": "^2.6.10",
     "vue-select": "^3.1.0",
     "vue-social-sharing": "^2.4.7",

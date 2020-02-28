@@ -6,6 +6,7 @@ import axios from 'axios'
 import lodash from 'lodash'
 
 import {checkLocalStorageExpiry} from './helper'
+import './assets/css/tailwind.css'
 
 checkLocalStorageExpiry();
 
