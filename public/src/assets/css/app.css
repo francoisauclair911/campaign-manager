@@ -5,7 +5,7 @@
     outline: none;
 }
 .input {
-    @apply w-full h-12 mt-6 px-3 rounded border border-gray-500 !important;
+    @apply w-full h-12 mt-6 px-3 rounded border border-gray-500 mb-0 !important;
 }
 
 .custom-select {
@@ -33,11 +33,11 @@
 .custom-select div.vs__dropdown-toggle,
 .input-phone
 {
-    @apply h-12 mt-6 bg-white rounded border border-gray-500 !important;
+    @apply h-12 mt-6 mb-0 bg-white rounded border border-gray-500 !important;
 }
 
 .input-phone input[type="tel"]{
-    @apply h-auto border-0 w-0 flex-1 rounded overflow-hidden !important;
+    @apply mb-0 h-auto border-0 w-0 flex-1 rounded overflow-hidden !important;
 }
 
 .btn {
@@ -65,7 +65,7 @@ input::placeholder {
 }
 
 .error {
-    @apply text-red-700 text-xs text-left italic;
+    @apply text-red-700 text-xs text-left italic leading-6;
 }
 .error-checkbox {
     @apply error not-italic text-base;
@@ -84,7 +84,7 @@ input::placeholder {
     @apply hidden;
 }
 .form-switch-label {
-    @apply block overflow-hidden cursor-pointer bg-white border-0 rounded h-6 shadow-inner;
+    @apply block overflow-hidden cursor-pointer bg-white border-0 rounded h-6;
 
     transition: background-color 0.2s ease-in;
 }
@@ -122,4 +122,11 @@ input::placeholder {
     animation: spinner .6s linear infinite;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+    @apply transition-all transition ease-in duration-150;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+    @apply opacity-0;
+}
 /* purgecss end ignore */
