@@ -3,7 +3,7 @@ import App from "./App.vue";
 import axios from 'axios'
 
 
-import lodash from 'lodash'
+// import lodash from 'lodash'
 
 import {checkLocalStorageExpiry} from './helper'
 import './assets/css/tailwind.css'
@@ -11,8 +11,8 @@ import './assets/css/tailwind.css'
 checkLocalStorageExpiry();
 
 window.axios = axios
-window.lodash = lodash.noConflict();
-
+// window.lodash = lodash.noConflict();
+import './assets/css/app.css'
 
 Vue.config.productionTip = false;
 
