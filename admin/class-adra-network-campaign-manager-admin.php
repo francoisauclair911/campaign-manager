@@ -119,5 +119,7 @@ class Adra_Network_Campaign_Manager_Admin
         return (in_array($currentDomain, $possibleDomains));
     }
     
+
+    
     
 }

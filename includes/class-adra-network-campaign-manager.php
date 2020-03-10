@@ -127,6 +127,14 @@ class Adra_Network_Campaign_Manager
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-adra-network-campaign-manager-public.php';
         
+        
+        //elementor
+        require_once plugin_dir_path(dirname(__FILE__)) . 'widgets/elementor-widgets.php';
+        
+        //visual composer
+        require_once plugin_dir_path(dirname(__FILE__)) . 'widgets/visual-composer-widgets.php';
+    
+    
         $this->loader = new Adra_Network_Campaign_Manager_Loader();
         
     }
@@ -168,6 +176,14 @@ class Adra_Network_Campaign_Manager
         
         
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        
+        //elementor
+
+//        $plugin_elementor = new \Elementor\Init_Elementor_Extension($this->get_plugin_name(), $this->get_version());
+//        $this->loader->add_action('plugins_loaded', $plugin_elementor, 'init');
+    
+    
+    
     }
     
     /**
