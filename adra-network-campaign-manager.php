@@ -23,6 +23,8 @@
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       adra-network-campaign-manager
  * Domain Path:       /languages
+ * GitHub Plugin URI: francoisauclair911/campaign-manager
+ * GitHub Plugin URI: https://github.com/francoisauclair911/campaign-manager
  */
 
 // If this file is called directly, abort.
