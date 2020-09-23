@@ -1,6 +1,6 @@
 {
   "name": "adra-network-campaign-manager",
-  "version": "3.0.1",
+  "version": "3.0.5",
   "description": "Wordpress plugin",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "serve-admin": "cd admin && yarn run serve",
     "serve-public": "cd public && yarn run serve",
     "serve": "yarn run serve-public && yarn run serve-admin",
-    "archive": "git ls-files -z | xargs -0 7z a -tzip adra-network-campaign-manager.zip"
+    "archive": "rm  adra-network-campaign-manager-plugin.zip && git ls-files -z | xargs -0 7z a -tzip adra-network-campaign-manager-plugin.zip"
   },
   "repository": {
     "type": "git",

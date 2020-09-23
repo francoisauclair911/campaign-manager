@@ -1,63 +1,74 @@
 @import 'tailwind.css';
 /* purgecss start ignore */
+
+@import url('https://cdnjs.cloudflare.com/ajax/libs/vue-select/3.10.8/vue-select.min.css');
 *:focus {
     outline: 0;
     outline: none;
 }
+
 .input {
     @apply w-full h-12 mt-6 px-3 rounded border border-gray-500 mb-0 !important;
 }
 
 .custom-select {
-    @apply w-full h-auto mt-6  px-0 rounded ;
+    @apply w-full h-auto px-0 mt-6 rounded;
 }
-.custom-select input.vs__search,
-.custom-select input.vs__search:focus{
+
+.custom-select input.vs__search, .custom-select input.vs__search:focus {
     @apply bg-white border-0 cursor-pointer h-8 mt-2 py-0 px-3 !important;
 }
-.custom-select span.vs__selected + input {
+
+.custom-select span.vs__selected+input {
     @apply hidden;
 }
+
 .custom-select.interests-select .vs__selected {
     @apply text-left text-sm !important;
 }
+
 .custom-select ul.vs__dropdown-menu {
     /*overflow: auto;*/
 }
-.custom-select ul.vs__dropdown-menu li.vs__dropdown-option{
+
+.custom-select ul.vs__dropdown-menu li.vs__dropdown-option {
     white-space: normal;
 }
+
 .custom-select .vs__selected-options {
     /*@apply overflow-hidden;*/
 }
-.custom-select div.vs__dropdown-toggle,
-.input-phone
-{
+
+.custom-select div.vs__dropdown-toggle, .input-phone {
     @apply h-12 mt-6 mb-0 bg-white rounded border border-gray-500 !important;
 }
 
-.input-phone input[type="tel"]{
+.input-phone input[type="tel"] {
     @apply mb-0 h-auto border-0 w-0 flex-1 rounded overflow-hidden !important;
 }
 
 .btn {
-    @apply font-bold py-3 px-10 rounded uppercase text-xl;
+    @apply px-10 py-3 text-xl font-bold uppercase rounded;
 }
+
 .btn-primary {
-    @apply bg-adra border-none text-white;
+    @apply text-white border-none bg-adra;
 }
+
 .btn-primary:hover {
-    @apply bg-adra border-none opacity-75 text-white;
+    @apply text-white border-none opacity-75 bg-adra;
 }
+
 .btn-primary:focus {
-    @apply bg-adra border-none opacity-75 text-white;
+    @apply text-white border-none opacity-75 bg-adra;
 }
+
 .btn-primary-invert {
     @apply bg-white text-adra;
 }
 
 input[type='checkbox'] {
-    @apply w-4 h-4 bg-white rounded border-2 mr-4;
+    @apply w-4 h-4 mr-4 bg-white border-2 rounded;
 }
 
 input::placeholder {
@@ -65,68 +76,77 @@ input::placeholder {
 }
 
 .error {
-    @apply text-red-700 text-xs text-left italic leading-6;
+    @apply text-xs italic leading-6 text-left text-red-700;
 }
+
 .error-checkbox {
-    @apply error not-italic text-base;
+    @apply text-base not-italic error;
 }
-.error-input,
-.error-select div.vs__dropdown-toggle,
-.error-input-phone.vue-tel-input {
+
+.error-input, .error-select div.vs__dropdown-toggle, .error-input-phone.vue-tel-input {
     @apply border border-red-600;
 }
 
 /* CHECKBOX TOGGLE SWITCH */
-.form-switch  {
-    @apply relative select-none w-12 mr-2 leading-normal;
+
+.form-switch {
+    @apply relative w-12 mr-2 leading-normal select-none;
 }
+
 .form-switch-checkbox {
     @apply hidden;
 }
-.form-switch-label {
-    @apply block overflow-hidden cursor-pointer bg-white border-0 rounded h-6;
 
+.form-switch-label {
+    @apply block h-6 overflow-hidden bg-white border-0 rounded cursor-pointer;
     transition: background-color 0.2s ease-in;
 }
+
 .form-switch-label:before {
-    @apply absolute block bg-white inset-y-0 w-6 h-6 border-2 border-adra rounded -ml-1;
+    @apply absolute inset-y-0 block w-6 h-6 -ml-1 bg-white border-2 rounded border-adra;
     right: 50%;
     content: "";
     transition: all 0.2s ease-in;
 }
-.form-switch-checkbox:checked + .form-switch-label,
-.form-switch-checkbox:checked + .form-switch-label:before {
 
+.form-switch-checkbox:checked+.form-switch-label, .form-switch-checkbox:checked+.form-switch-label:before {}
+
+.form-switch-checkbox:checked+.form-switch-label {
+    @apply shadow-none bg-adra;
 }
-.form-switch-checkbox:checked + .form-switch-label {
-    @apply bg-adra shadow-none;
-}
-.form-switch-checkbox:checked + .form-switch-label:before {
+
+.form-switch-checkbox:checked+.form-switch-label:before {
     /*@apply pin-r;*/
     @apply right-0;
 }
 
-
-
 @keyframes spinner {
-    to {transform: rotate(360deg);}
+    to {
+        transform: rotate(360deg);
+    }
 }
+
 .spinner {
-    @apply block relative w-full h-auto;
+    @apply relative block w-full h-auto;
 }
+
 .spinner:before {
-    @apply absolute w-5 h-5 -mt-2 -ml-2 rounded-full border-2 border-t-2 border-gray-600;
+    @apply absolute w-5 h-5 -mt-2 -ml-2 border-2 border-t-2 border-gray-600 rounded-full;
     content: '';
     box-sizing: border-box;
     border-top-color: #000;
     animation: spinner .6s linear infinite;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-    @apply transition-all transition ease-in duration-150;
+.fade-enter-active, .fade-leave-active {
+    @apply transition-all transition duration-150 ease-in;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+
+.fade-enter, .fade-leave-to
+/* .fade-leave-active below version 2.1.8 */
+
+    {
     @apply opacity-0;
 }
+
 /* purgecss end ignore */

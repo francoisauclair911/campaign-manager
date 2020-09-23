@@ -1,45 +1,38 @@
 <template>
-    <div>
+    <div class="w-full px-4 pb-4">
         <form @submit.prevent="postForm">
             <transition
-                    enter-active-class="transition-all transition ease-in duration-300"
-                    leave-active-class="transition-all transition ease-in duration-300"
+                    enter-active-class="transition-all transition duration-300 ease-in"
+                    leave-active-class="transition-all transition duration-300 ease-in"
                     enter-class="opacity-0 scale-70"
-                    enter-to-class="opacity-100 scale-100"
-                    leave-class="opacity-100 scale-100"
+                    enter-to-class="scale-100 opacity-100"
+                    leave-class="scale-100 opacity-100"
                     leave-to-class="opacity-0 scale-70"
             >
                 <section v-if="isSelectFieldsReady && showForm">
                     <div class="flex flex-wrap -mx-3 ">
-                        <div class="w-full sm:w-1/2 px-2 h-20">
+                        <div class="w-full h-20 px-2 sm:w-1/2">
                             <input v-model="form.first_name"
-                                   class="input  "
+                                   class="input "
                                    :class="[serverResponseErrors.first_name !== undefined ? 'error-input' : '']"
                                    name="first_name"
                                    type="text"
                                    :placeholder="translatedPlaceholders.first_name || placeholders.first_name"
                                    required>
-                            <transition name="fade">
-                                <div v-if="serverResponseErrors.first_name"
-                                     v-text="serverResponseErrors.first_name"
-                                     class="error"></div>
-                            </transition>
+                            <div class="error" v-text="serverResponseErrors.first_name"></div>
 
                         </div>
-                        <div class="w-full sm:w-1/2 px-2 h-20">
+                        <div class="w-full h-20 px-2 sm:w-1/2">
                             <input v-model="form.last_name"
                                    class="input"
                                    :class="[serverResponseErrors.last_name !== undefined ? 'error-input' : '']"
                                    name="last_name"
                                    type="text"
                                    :placeholder="translatedPlaceholders.last_name || placeholders.last_name">
-                            <transition name="fade">
-                                <div class="error" v-if="serverResponseErrors.last_name"
-                                     v-text="serverResponseErrors.last_name"></div>
-                            </transition>
+                            <div class="error" v-text="serverResponseErrors.last_name"></div>
                         </div>
 
-                        <div class="w-full sm:w-1/2 px-2 h-20">
+                        <div class="w-full h-20 px-2 sm:w-1/2">
                             <v-select v-if="countriesList"
                                       class="custom-select"
                                       :class="[serverResponseErrors.country_id !== undefined ? 'error-select' : '']"
@@ -49,13 +42,10 @@
                                       v-model="form.country_id"
                                       :placeholder="translatedPlaceholders.country || placeholders.country">
                             </v-select>
-                            <transition name="fade">
-                                <div class="error" v-if="serverResponseErrors.country_id"
-                                     v-text="serverResponseErrors.country_id"></div>
-                            </transition>
+                            <div class="error" v-text="serverResponseErrors.country_id"></div>
 
                         </div>
-                        <div class="w-full sm:w-1/2 px-2 h-20">
+                        <div class="w-full h-20 px-2 sm:w-1/2">
                             <input v-model="form.zip_code"
                                    class="input"
                                    :class="[serverResponseErrors.zip_code !== undefined ? 'error-input' : '']"
@@ -63,28 +53,26 @@
                                    type="text"
                                    :placeholder="translatedPlaceholders.zip_code || placeholders.zip_code"
                                    style="">
-                            <transition name="fade">
-                                <div class="error" v-if="serverResponseErrors.zip_code"
-                                     v-text="serverResponseErrors.zip_code"></div>
-                            </transition>
+                            <div class="error" v-text="serverResponseErrors.zip_code"></div>
 
                         </div>
 
-                        <div class="w-full px-2 h-20"
-                             :class="enablePhoneInput ? 'sm:w-1/2' : '' ">
+                        <div class="h-20 px-2"
+                             :class="enablePhoneInput ? 'flex-initial sm:flex-1 w-full sm:w-auto' : 'w-full' ">
                             <input v-model="form.email"
                                    :class="[serverResponseErrors.email !== undefined ? 'error-input' : '']"
                                    class="input"
                                    name="email"
                                    type="text"
                                    :placeholder="translatedPlaceholders.email || placeholders.email">
-                            <transition name="fade">
                                 <div class="error" v-if="serverResponseErrors.email"
                                      v-text="serverResponseErrors.email"></div>
-                            </transition>
+                        </div>
+                        <div class="self-center w-full mx-2 mt-4 font-bold text-center sm:w-auto" v-if="enablePhoneInput">
+                           {{ translatedPlaceholders.or || placeholders.or }}
                         </div>
 
-                        <div class="w-full sm:w-1/2 px-2 h-20" v-if="enablePhoneInput">
+                        <div class="flex-initial w-full h-20 px-2 sm:flex-1 sm:w-auto" v-if="enablePhoneInput">
 
                             <vue-tel-input v-if="countriesList"
                                            inputId="tel-input"
@@ -98,86 +86,56 @@
                                            mode="international"
                                            :preferredCountries="[countriesList[0]['alpha2Code']]"
                             ></vue-tel-input>
-                            <transition name="fade">
-                                <div class="error" v-if="serverResponseErrors.phone"
-                                     v-text="serverResponseErrors.phone"></div>
-                            </transition>
+                            <div class="error" v-text="serverResponseErrors.phone"></div>
 
                         </div>
 
-                        <!--                        <div class="w-full sm:w-2/5 px-2 h-20" v-if="enablePhoneInput">-->
-                        <!--                            <v-select v-model="form.communication_preference"-->
-                        <!--                                      class="custom-select"-->
-                        <!--                                      :class="[serverResponseErrors.communication_preference !== undefined ? 'error-select' : '']"-->
-                        <!--                                      :options="communicationPreferenceOptions"-->
-                        <!--                                      :reduce="option => option.value"-->
-                        <!--                                      label="text"-->
-                        <!--                                      :placeholder="translatedPlaceholders.communication_preference || placeholders.communication_preference">-->
-                        <!--                            </v-select>-->
-                        <!--                            <div class="error" v-text="serverResponseErrors.communication_preference"></div>-->
+                        <div class="flex items-center w-full px-2 mt-6 mb-3 text-left">
 
-                        <!--                        </div>-->
-
-
-                        <!--                        <div class="w-full px-2 h-20"-->
-                        <!--                             :class="enablePhoneInput ? 'sm:w-3/5' : '' ">-->
-                        <!--                            <v-select v-if="interestsList"-->
-                        <!--                                      class="custom-select interests-select"-->
-                        <!--                                      :class="[serverResponseErrors.interest_id !== undefined ? 'error-select' : '']"-->
-                        <!--                                      v-model="form.interest_id"-->
-                        <!--                                      :options="interestsList"-->
-                        <!--                                      name="interest"-->
-                        <!--                                      label="label"-->
-                        <!--                                      :reduce="interest => parseInt(interest.code)"-->
-                        <!--                                      :placeholder="translatedPlaceholders.interest || placeholders.interest"-->
-                        <!--                                      :required="!form.interest_id"-->
-                        <!--                            >-->
-                        <!--                            </v-select>-->
-                        <!--                            <div class="error" v-text="serverResponseErrors.interest_id"></div>-->
-
-                        <!--                        </div>-->
-                        <div class="w-full px-2 text-left mt-6 mb-3 flex items-center">
-                            <div class="form-switch inline-block align-middle ">
-                                <!--                            <input type="checkbox" name="1" id="1" class="form-switch-checkbox" />-->
-                                <input type="checkbox"
-                                       name="age_consent"
-                                       id="age_consent"
-                                       class="form-switch-checkbox"
-                                       v-model.numeric="form.age_consent"
-                                       :true-value="1"
-                                       :false-value="0">
-                                <label class="form-switch-label" for="age_consent"></label>
-                            </div>
-                            <label for="age_consent"
-                                   :class="[serverResponseErrors.age_consent !== undefined ? 'error-checkbox' : '' ]"
-                                   v-text="translatedPlaceholders.age_consent || placeholders.age_consent">
-                                Default
+                            <label class="flex items-start justify-start leading-7">
+                                <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 mr-2 bg-white border-2 rounded border-adra focus-within:border-blue-500">
+                                    <input type="checkbox"
+                                           name="age_consent"
+                                           id="age_consent"
+                                           class="absolute opacity-0"
+                                           v-model.number="form.age_consent"
+                                           :true-value="1"
+                                           :false-value="0">
+                                    <svg class="w-4 h-4 transition-all duration-150 opacity-0 pointer-events-none fill-current text-adra"
+                                         viewBox="0 0 20 20">
+                                        <path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/>
+                                    </svg>
+                                </div>
+                                <div class="select-none"
+                                     :class="[serverResponseErrors.age_consent !== undefined ? 'error-checkbox' : '' ]"
+                                     v-text="translatedPlaceholders.age_consent || placeholders.age_consent"></div>
                             </label>
                         </div>
-
-                        <div class="w-full px-2 text-left flex items-center">
-                            <div class="form-switch inline-block align-middle">
-                                <!--                            <input type="checkbox" name="1" id="1" class="form-switch-checkbox" />-->
-                                <input type="checkbox"
-                                       name="age_consent"
-                                       id="communication_consent"
-                                       class="form-switch-checkbox"
-                                       v-model.numeric="form.communication_consent"
-                                       :true-value="1"
-                                       :false-value="0">
-                                <label class="form-switch-label" for="communication_consent"></label>
-                            </div>
-                            <label for="age_consent"
-                                   :class="[serverResponseErrors.communication_consent !== undefined ? 'error-checkbox' : '' ]"
-                                   v-text="translatedPlaceholders.communication_consent || placeholders.communication_consent">
-                                Default
+                        <div class="flex items-center w-full px-2 text-left">
+                            <label class="flex items-start justify-start leading-7">
+                                <div class="flex items-center justify-center flex-shrink-0 w-6 h-6 mr-2 bg-white border-2 rounded border-adra focus-within:border-blue-500">
+                                    <input type="checkbox"
+                                           name="communication_consent"
+                                           id="communication_consent"
+                                           class="absolute opacity-0"
+                                           v-model.number="form.communication_consent"
+                                           :true-value="1"
+                                           :false-value="0">
+                                    <svg class="w-4 h-4 transition-all duration-150 opacity-0 pointer-events-none fill-current text-adra"
+                                         viewBox="0 0 20 20">
+                                        <path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/>
+                                    </svg>
+                                </div>
+                                <div class="select-none"
+                                     :class="[serverResponseErrors.communication_consent !== undefined ? 'error-checkbox' : '' ]"
+                                     v-text="translatedPlaceholders.communication_consent || placeholders.communication_consent"></div>
                             </label>
                         </div>
 
                     </div>
                     <div class="flex mt-4">
 
-                        <button class="btn btn-primary flex w-1/3 h-12 justify-center items-center mx-auto"
+                        <button class="flex items-center justify-center w-1/3 h-12 mx-auto btn btn-primary-invert"
                                 :disabled="submitButtonDisabled"
                                 @click.prevent="postForm">
                             <template v-if="this.states.formRequest !== 'posting'">
@@ -189,7 +147,7 @@
                         </button>
 
                     </div>
-                    <div class="flex flex-col w-full bg-white rounded mt-6 p-4"
+                    <div class="flex flex-col w-full p-4 mt-6 bg-white rounded"
                          v-if="hasInvalidTokens">
                         <ul>
                             <li class="error" v-text="serverResponseErrors.organization_token"></li>
@@ -201,104 +159,103 @@
 
             </transition>
             <transition
-                    enter-active-class="transition-all transition ease-in duration-300"
-                    leave-active-class="transition-all transition ease-in duration-300"
+                    enter-active-class="transition-all transition duration-300 ease-in"
+                    leave-active-class="transition-all transition duration-300 ease-in"
                     enter-class="opacity-0 scale-70"
-                    enter-to-class="opacity-100 scale-100"
-                    leave-class="opacity-100 scale-100"
+                    enter-to-class="scale-100 opacity-100"
+                    leave-class="scale-100 opacity-100"
                     leave-to-class="opacity-0 scale-70"
             >
-                <section v-if="showThankYou && serverResponse"
-                         class="flex flex-col justify-center items-center w-full  rounded mt-6 p-4 ">
+                                <section v-if="showThankYou && serverResponse"
+                        class="flex flex-col items-center justify-center w-full p-4 mt-6 rounded">
 
-                    <p
-                            class="text-white text-center font-display my-4 text-3xl sm:text-5xl  leading-negative whitespace-normal"
+                    <h1
+                            class="my-4 text-5xl text-center text-white whitespace-no-wrap font-display sm:text-8xl lg:text-8xl leading-negative sm:whitespace-normal"
                     >
                         {{ translatedPlaceholders.thank_you_heading || placeholders.thank_you_heading}}
 
-                    </p>
+                    </h1>
                     <p
-                            class="text-white w-full md:w-3/4 text-center text-base md:text-xl lg:text-2xl mb-8"
+                            class="w-full mb-8 text-base text-center text-gray-800 md:w-3/4 md:text-xl lg:text-2xl"
                     >
                         {{ translatedPlaceholders.thank_you_subheading || placeholders.thank_you_subheading}}
                     </p>
 
-                    <div class="w-full flex flex-wrap justify-center">
-                        <button type="text"
-                                class="w-full overflow-hidden md:w-3/4 inline-block hover:bg-adra focus:bg-adra hover:text-white
-                                        focus:outline-none leading-7 outline-none text-center text-lg font-light italic cursor-pointer py-2 px-2
-                                        border border-solid border-adra rounded-r md:rounded-r-none  rounded-l
-                                        border-l-1
-                                        border-r-1 hover:bg-adra hover:text-white"
-                                @click.prevent="copyReferrerURL">
-                            <span class="text-xl text-black">{{generatedReferralLink}}</span>
-                        </button>
+                    <div class="flex flex-col flex-wrap items-center justify-center w-full">
+                        <div class="inline-flex flex-row justify-center w-full max-w-6xl">
+                            <a
+                                    class="outline-none btn-disabled  btn-primary bg-primary-30% text-black rounded rounded-tr-none rounded-br-none border-2 border-adra text-2xl font-light italic  px-2 py-1 border-r-0"
 
-                        <button @click.prevent="copyReferrerURL"
-                                class="mt-4 md:mt-0 focus:bg-adra focus:outline-none  outline-none
-                                       leading-none btn-disabled hover:shadow-none focus:shadow-none
-                                       text-white btn-primary bg-primary-30% rounded md:rounded-l-none border-2 border-adra
-                                       font-light italic  px-2 py-1 border-l-0"
-                        >
-                            <svg v-if="!states.isReferralLinkCopied"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 class="fill-current text-white pl-2 pt-2 w-10 h-10"
-                                 viewBox="0 0 40 40">
-                                <path d="M4 2a2 2 0 00-2 2v14h2V4h14V2H4zm4 4a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2H8zm0 2h12v12H8V8z"/>
-                            </svg>
+                            >
+                                <svg
+                                     xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                     viewBox="0 0 38 38"
+                                     width="39"
+                                     height="39"
+                                     class="pt-2 pl-2 text-white fill-current">
+                                    <path d="M6.188 8.719c.439-.439.926-.801 1.444-1.087 2.887-1.591 6.589-.745 8.445 2.069l-2.246 2.245c-.644-1.469-2.243-2.305-3.834-1.949-.599.134-1.168.433-1.633.898l-4.304 4.306c-1.307 1.307-1.307 3.433 0 4.74 1.307 1.307 3.433 1.307 4.74 0l1.327-1.327c1.207.479 2.501.67 3.779.575l-2.929 2.929c-2.511 2.511-6.582 2.511-9.093 0s-2.511-6.582 0-9.093l4.304-4.306zm6.836-6.836l-2.929 2.929c1.277-.096 2.572.096 3.779.574l1.326-1.326c1.307-1.307 3.433-1.307 4.74 0 1.307 1.307 1.307 3.433 0 4.74l-4.305 4.305c-1.311 1.311-3.44 1.3-4.74 0-.303-.303-.564-.68-.727-1.051l-2.246 2.245c.236.358.481.667.796.982.812.812 1.846 1.417 3.036 1.704 1.542.371 3.194.166 4.613-.617.518-.286 1.005-.648 1.444-1.087l4.304-4.305c2.512-2.511 2.512-6.582.001-9.093-2.511-2.51-6.581-2.51-9.092 0z"/>                                </svg>
+                            </a>
+                            <input type="text"
+                                   class="w-2/5 px-2 py-1 text-2xl italic font-light text-center border-2 border-l-0 border-r-0 outline-none cursor-pointer border-adra js-referrer-input"
+                                   :value="generatedReferralLink"
+                                   @click.prevent="copyReferrerURL"/>
 
-                            <svg v-if="states.isReferralLinkCopied"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 class="fill-current text-white pl-2 pt-2 w-10 h-10"
-                                 viewBox="0 0 40 40">
-                                <path d="M20.285 2L9 13.567 3.714 8.556 0 12.272 9 21 24 5.715z"/>
-                            </svg>
-                        </button>
+                            <a @click="copyReferrerURL"
+                                    class="inline-flex items-center px-2 py-1 mr-4 text-2xl bg-white border-2 rounded rounded-tl-none rounded-bl-none outline-none cursor-pointer btn-outline-primary text-primary border-adra js-referrer-input "
+                            >
+                                <svg v-if="!states.isReferralLinkCopied"
+                                     xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                     viewBox="0 0 38 38"
+                                     width="39"
+                                     height="39"
+                                     class="pt-2 pl-2 fill-current text-adra">
+                                    <path d="M 4 2 C 2.895 2 2 2.895 2 4 L 2 18 L 4 18 L 4 4 L 18 4 L 18 2 L 4 2 z M 8 6 C 6.895 6 6 6.895 6 8 L 6 20 C 6 21.105 6.895 22 8 22 L 20 22 C 21.105 22 22 21.105 22 20 L 22 8 C 22 6.895 21.105 6 20 6 L 8 6 z M 8 8 L 20 8 L 20 20 L 8 20 L 8 8 z"></path>
+                                </svg>
+                                <svg v-if="states.isReferralLinkCopied"
+                                     xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                     viewBox="0 0 38 38"
+                                     width="39"
+                                     height="39"
+                                     class="pt-2 pl-2 fill-current text-adra">
+                                    <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/>
+                                </svg>
+                            </a>
+                        
+                        </div>
+                        <div>
+                           <p class="w-full mt-4 text-center">
+                                <a class="inline-flex items-center flex-shrink-0 px-2 py-2 mr-2 font-bold text-white btn btn-default btn-primary"
+                                   :href="`https://www.facebook.com/sharer/sharer.php?u=${generatedReferralLink}`"
+                                   target="_blank">
+                                    <!--<svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">-->
+                                    <!--<path d="M17.525,9H14V7c0-1.032,0.084-1.682,1.563-1.682h1.868v-3.18C16.522,2.044,15.608,1.998,14.693,2C11.98,2,10,3.657,10,6.699V9H7v4l3-0.001V22h4v-9.003l3.066-0.001L17.525,9z"></path>-->
 
+                                    <!--</svg>-->
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                         width="24" height="24"
+                                         viewBox="0 0 24 24"
+                                         class="fill-current">
+                                        <path d="M17.525,9H14V7c0-1.032,0.084-1.682,1.563-1.682h1.868v-3.18C16.522,2.044,15.608,1.998,14.693,2 C11.98,2,10,3.657,10,6.699V9H7v4l3-0.001V22h4v-9.003l3.066-0.001L17.525,9z"></path>
+                                    </svg>
+                                </a>
+                                <a class="inline-flex items-center flex-shrink-0 px-2 py-2 font-bold text-white btn btn-default btn-primary"
+                                   :href="`https://twitter.com/intent/tweet?url=${generatedReferralLink}`"
+                                   target="_blank">
+                                    <!--<svg class="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">-->
+                                    <!--<path d="M28,6.937c-0.957,0.425-1.985,0.711-3.064,0.84c1.102-0.66,1.947-1.705,2.345-2.951c-1.03,0.611-2.172,1.055-3.388,1.295 c-0.973-1.037-2.359-1.685-3.893-1.685c-2.946,0-5.334,2.389-5.334,5.334c0,0.418,0.048,0.826,0.138,1.215 c-4.433-0.222-8.363-2.346-10.995-5.574C3.351,6.199,3.088,7.115,3.088,8.094c0,1.85,0.941,3.483,2.372,4.439 c-0.874-0.028-1.697-0.268-2.416-0.667c0,0.023,0,0.044,0,0.067c0,2.585,1.838,4.741,4.279,5.23 c-0.447,0.122-0.919,0.187-1.406,0.187c-0.343,0-0.678-0.034-1.003-0.095c0.679,2.119,2.649,3.662,4.983,3.705 c-1.825,1.431-4.125,2.284-6.625,2.284c-0.43,0-0.855-0.025-1.273-0.075c2.361,1.513,5.164,2.396,8.177,2.396 c9.812,0,15.176-8.128,15.176-15.177c0-0.231-0.005-0.461-0.015-0.69C26.38,8.945,27.285,8.006,28,6.937z"></path>-->
+                                    <!--</svg>-->
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                         width="25" height="25"
+                                         viewBox="0 0 30 30"
+                                         class="fill-current">
+                                        <path d="M28,6.937c-0.957,0.425-1.985,0.711-3.064,0.84c1.102-0.66,1.947-1.705,2.345-2.951c-1.03,0.611-2.172,1.055-3.388,1.295 c-0.973-1.037-2.359-1.685-3.893-1.685c-2.946,0-5.334,2.389-5.334,5.334c0,0.418,0.048,0.826,0.138,1.215 c-4.433-0.222-8.363-2.346-10.995-5.574C3.351,6.199,3.088,7.115,3.088,8.094c0,1.85,0.941,3.483,2.372,4.439 c-0.874-0.028-1.697-0.268-2.416-0.667c0,0.023,0,0.044,0,0.067c0,2.585,1.838,4.741,4.279,5.23 c-0.447,0.122-0.919,0.187-1.406,0.187c-0.343,0-0.678-0.034-1.003-0.095c0.679,2.119,2.649,3.662,4.983,3.705 c-1.825,1.431-4.125,2.284-6.625,2.284c-0.43,0-0.855-0.025-1.273-0.075c2.361,1.513,5.164,2.396,8.177,2.396 c9.812,0,15.176-8.128,15.176-15.177c0-0.231-0.005-0.461-0.015-0.69C26.38,8.945,27.285,8.006,28,6.937z"></path>
+                                    </svg>
+
+                                </a>
+
+                            </p>
+                        </div>
                     </div>
-                    <div class="w-full">
-                        <social-sharing :url="generatedReferralLink" hashtags="EveryChildEverywhere"
-                                        inline-template>
-                            <div class="mt-6 flex items-center justify-center">
-                                <network network="facebook">
-                                    <div class="outline-none px-4 py-2 bg-adra text-white rounded mx-2 hover:opacity-75 focus:outline-none"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             class="fill-current text-white w-6 h-6 mr-auto">
-                                            <path d="M17.525 9H14V7c0-1.032.084-1.682 1.563-1.682h1.868v-3.18A26.065 26.065 0 0014.693 2C11.98 2 10 3.657 10 6.699V9H7v4l3-.001V22h4v-9.003l3.066-.001L17.525 9z"/>
-                                        </svg>
-                                    </div>
-                                </network>
-                                <network network="twitter">
-                                    <div class="outline-none px-4 py-2 bg-adra text-white rounded mx-2 hover:opacity-75 focus:outline-none">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"
-                                             class="fill-current text-white w-6 h-6">
-                                            <path d="M28 6.937c-.957.425-1.985.711-3.064.84a5.343 5.343 0 002.345-2.951 10.696 10.696 0 01-3.388 1.295 5.334 5.334 0 00-9.089 4.864A15.143 15.143 0 013.809 5.411a5.321 5.321 0 00-.721 2.683 5.33 5.33 0 002.372 4.439 5.323 5.323 0 01-2.416-.667v.067a5.335 5.335 0 004.279 5.23 5.336 5.336 0 01-2.409.092 5.34 5.34 0 004.983 3.705 10.699 10.699 0 01-6.625 2.284c-.43 0-.855-.025-1.273-.075a15.102 15.102 0 008.177 2.396c9.812 0 15.176-8.128 15.176-15.177 0-.231-.005-.461-.015-.69A10.855 10.855 0 0028 6.937z"/>
-                                        </svg>
-                                    </div>
-                                </network>
-                                <network network="whatsapp">
-                                    <div class="outline-none px-4 py-2 bg-adra text-white rounded mx-2 hover:opacity-75 focus:outline-none flex-inline-flex justify-center">
-
-                                        <svg viewBox="0 0 24 24" class="fill-current text-white w-6 h-6"
-                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                                        </svg>
-                                    </div>
-                                </network>
-                                <network network="email">
-                                    <div class="outline-none px-4 py-2 bg-adra text-white rounded mx-2 hover:opacity-75 focus:outline-none flex-inline-flex justify-center">
-                                        <svg viewBox="0 0 24 24" class="fill-current text-white w-6 h-6">
-                                            <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.649 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068A1.485 1.485 0 011.5 3H2l10 7.25L22 3h.5c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z"/>
-                                        </svg>
-                                    </div>
-                                </network>
-                            </div>
-
-                        </social-sharing>
-                    </div>
-
-                    <!--                        </div>-->
                 </section>
             </transition>
 
@@ -311,15 +268,13 @@
 
   import vSelect from 'vue-select'
   import { VueTelInput } from 'vue-tel-input'
-  import SocialSharing from 'vue-social-sharing'
 
   export default {
 
-    name: 'CampaignManagerFormV3',
+    name: 'CampaignManagerForm',
     components: {
       vSelect,
-      VueTelInput,
-      SocialSharing
+      VueTelInput
     },
     props: {
       isLocal: {
@@ -338,7 +293,6 @@
         apiURL: '',
         showForm: true,
         showThankYou: false,
-        // showThankYou: true,
         attributes: null,
         countriesList: null,
         interestsList: null,
@@ -362,7 +316,6 @@
           event_token: null,
         },
         serverResponse: null,
-        // serverResponse: true,
         serverResponseErrors: {},
         submitButtonDisabled: false,
         noDashMapInterest: null,
@@ -372,7 +325,6 @@
       this.attributes = this.$root.$data.shortcodeAttributes
     },
     mounted () {
-      console.log('mounted!')
       this.setApiURL()
       this.fetchForm()
 
@@ -381,7 +333,6 @@
     methods: {
       fetchForm () {
         const formToken = this.getParams('form_token') || this.attributes.form_token || 'LbWiQjmIIRgshiEdgpVX'
-
         axios.get(this.apiURL + '/api/forms/' + formToken)
           .then((result) => {
             this.serverForm = result.data
@@ -460,23 +411,6 @@
       },
       copyReferrerURL: function () {
 
-        if (typeof (navigator.clipboard) == 'undefined') {
-          const textArea = document.createElement('textarea')
-          textArea.value = this.generatedReferralLink
-          textArea.style.position = 'fixed'  //avoid scrolling to bottom
-          document.body.appendChild(textArea)
-          textArea.focus()
-          textArea.select()
-
-          try {
-            const successful = document.execCommand('copy')
-            this.setState('isReferralLinkCopied', successful)
-          } catch (err) {
-            this.setState('isReferralLinkCopied', false)
-          }
-          document.body.removeChild(textArea)
-          return
-        }
         navigator.clipboard.writeText(this.generatedReferralLink)
 
           .then(() => {
@@ -526,11 +460,7 @@
         if (Object.keys(this.serverResponseErrors).length === 0 && this.serverResponseErrors.constructor === Object) {
           return false
         }
-        console.log(Object.keys(this.serverResponseErrors))
-        console.log('includes', Object.keys(this.serverResponseErrors).includes('_token'))
-
         const matches = ['event_token', 'campaign_token', 'organization_token']
-
         return Object.keys(this.serverResponseErrors).some(v => matches.indexOf(v) !== -1)
 
       },
@@ -560,315 +490,8 @@
   }
 </script>
 <style>
-    /* purgecss start ignore */
-    .v-select {
-        position: relative;
-        font-family: inherit
+   
+    input:checked + svg {
+        @apply opacity-100;
     }
-
-    .v-select,
-    .v-select * {
-        box-sizing: border-box
-    }
-
-    @-webkit-keyframes vSelectSpinner {
-        0% {
-            transform: rotate(0deg)
-        }
-        to {
-            transform: rotate(1turn)
-        }
-    }
-
-    @keyframes vSelectSpinner {
-        0% {
-            transform: rotate(0deg)
-        }
-        to {
-            transform: rotate(1turn)
-        }
-    }
-
-    .vs__fade-enter-active,
-    .vs__fade-leave-active {
-        transition: opacity .15s cubic-bezier(1, .5, .8, 1)
-    }
-
-    .vs__fade-enter,
-    .vs__fade-leave-to {
-        opacity: 0
-    }
-
-    .vs--disabled .vs__clear,
-    .vs--disabled .vs__dropdown-toggle,
-    .vs--disabled .vs__open-indicator,
-    .vs--disabled .vs__search,
-    .vs--disabled .vs__selected {
-        cursor: not-allowed;
-        background-color: #f8f8f8
-    }
-
-    .v-select[dir=rtl] .vs__actions {
-        padding: 0 3px 0 6px
-    }
-
-    .v-select[dir=rtl] .vs__clear {
-        margin-left: 6px;
-        margin-right: 0
-    }
-
-    .v-select[dir=rtl] .vs__deselect {
-        margin-left: 0;
-        margin-right: 2px
-    }
-
-    .v-select[dir=rtl] .vs__dropdown-menu {
-        text-align: right
-    }
-
-    .vs__dropdown-toggle {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        display: flex;
-        padding: 0 0 4px;
-        background: none;
-        border: 1px solid rgba(60, 60, 60, .26);
-        border-radius: 4px;
-        white-space: normal
-    }
-
-    .vs__selected-options {
-        display: flex;
-        flex-basis: 100%;
-        flex-grow: 1;
-        flex-wrap: wrap;
-        padding: 0 2px;
-        position: relative
-    }
-
-    .vs__actions {
-        display: flex;
-        align-items: center;
-        padding: 4px 6px 0 3px
-    }
-
-    .vs--searchable .vs__dropdown-toggle {
-        cursor: text
-    }
-
-    .vs--unsearchable .vs__dropdown-toggle {
-        cursor: pointer
-    }
-
-    .vs--open .vs__dropdown-toggle {
-        border-bottom-color: transparent;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0
-    }
-
-    .vs__open-indicator {
-        fill: rgba(60, 60, 60, .5);
-        transform: scale(1);
-        transition: transform .15s cubic-bezier(1, -.115, .975, .855);
-        transition-timing-function: cubic-bezier(1, -.115, .975, .855)
-    }
-
-    .vs--open .vs__open-indicator {
-        transform: rotate(180deg) scale(1)
-    }
-
-    .vs--loading .vs__open-indicator {
-        opacity: 0
-    }
-
-    .vs__clear {
-        fill: rgba(60, 60, 60, .5);
-        padding: 0;
-        border: 0;
-        background-color: transparent;
-        cursor: pointer;
-        margin-right: 8px
-    }
-
-    .vs__dropdown-menu {
-        display: block;
-        position: absolute;
-        top: calc(100% - 1px);
-        left: 0;
-        z-index: 1000;
-        padding: 5px 0;
-        margin: 0;
-        width: 100%;
-        max-height: 350px;
-        min-width: 160px;
-        overflow-y: auto;
-        box-shadow: 0 3px 6px 0 rgba(0, 0, 0, .15);
-        border: 1px solid rgba(60, 60, 60, .26);
-        border-top-style: none;
-        border-radius: 0 0 4px 4px;
-        text-align: left;
-        list-style: none;
-        background: #fff
-    }
-
-    .vs__no-options {
-        text-align: center
-    }
-
-    .vs__dropdown-option {
-        line-height: 1.42857143;
-        display: block;
-        padding: 3px 20px;
-        clear: both;
-        color: #333;
-        white-space: nowrap
-    }
-
-    .vs__dropdown-option:hover {
-        cursor: pointer
-    }
-
-    .vs__dropdown-option--highlight {
-        background: #5897fb;
-        color: #fff
-    }
-
-    .vs__dropdown-option--disabled {
-        background: inherit;
-        color: rgba(60, 60, 60, .5)
-    }
-
-    .vs__dropdown-option--disabled:hover {
-        cursor: inherit
-    }
-
-    .vs__selected {
-        display: flex;
-        align-items: center;
-        background-color: #f0f0f0;
-        border: 1px solid rgba(60, 60, 60, .26);
-        border-radius: 4px;
-        color: #333;
-        line-height: 1.4;
-        margin: 4px 2px 0;
-        padding: 0 .25em
-    }
-
-    .vs__deselect {
-        display: inline-flex;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        margin-left: 4px;
-        padding: 0;
-        border: 0;
-        cursor: pointer;
-        background: none;
-        fill: rgba(60, 60, 60, .5);
-        text-shadow: 0 1px 0 #fff
-    }
-
-    .vs--single .vs__selected {
-        background-color: transparent;
-        border-color: transparent
-    }
-
-    .vs--single.vs--open .vs__selected {
-        position: absolute;
-        opacity: .4
-    }
-
-    .vs--single.vs--searching .vs__selected {
-        display: none
-    }
-
-    .vs__search::-webkit-search-cancel-button {
-        display: none
-    }
-
-    .vs__search::-ms-clear,
-    .vs__search::-webkit-search-decoration,
-    .vs__search::-webkit-search-results-button,
-    .vs__search::-webkit-search-results-decoration {
-        display: none
-    }
-
-    .vs__search,
-    .vs__search:focus {
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        line-height: 1.4;
-        font-size: 1em;
-        border: 1px solid transparent;
-        border-left: none;
-        outline: none;
-        margin: 4px 0 0;
-        padding: 0 7px;
-        background: none;
-        box-shadow: none;
-        width: 0;
-        max-width: 100%;
-        flex-grow: 1
-    }
-
-    .vs__search::-webkit-input-placeholder {
-        color: inherit
-    }
-
-    .vs__search::-moz-placeholder {
-        color: inherit
-    }
-
-    .vs__search:-ms-input-placeholder {
-        color: inherit
-    }
-
-    .vs__search::-ms-input-placeholder {
-        color: inherit
-    }
-
-    .vs__search::placeholder {
-        color: inherit
-    }
-
-    .vs--unsearchable .vs__search {
-        opacity: 1
-    }
-
-    .vs--unsearchable .vs__search:hover {
-        cursor: pointer
-    }
-
-    .vs--single.vs--searching:not(.vs--open):not(.vs--loading) .vs__search {
-        opacity: .2
-    }
-
-    .vs__spinner {
-        align-self: center;
-        opacity: 0;
-        font-size: 5px;
-        text-indent: -9999em;
-        overflow: hidden;
-        border: .9em solid hsla(0, 0%, 39.2%, .1);
-        border-left-color: rgba(60, 60, 60, .45);
-        transform: translateZ(0);
-        -webkit-animation: vSelectSpinner 1.1s linear infinite;
-        animation: vSelectSpinner 1.1s linear infinite;
-        transition: opacity .1s
-    }
-
-    .vs__spinner,
-    .vs__spinner:after {
-        border-radius: 50%;
-        width: 5em;
-        height: 5em
-    }
-
-    .vs--loading .vs__spinner {
-        opacity: 1
-    }
-
-    /* purgecss end ignore */
 </style>

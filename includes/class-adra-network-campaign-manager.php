@@ -76,7 +76,7 @@ class Adra_Network_Campaign_Manager
         } else {
             $this->version = '1.0.0';
         }
-        $this->plugin_name = 'adra-network-campaign-manager';
+        $this->plugin_name = 'adra-network-campaign-manager-plugin';
         
         $this->load_dependencies();
         $this->set_locale();
